@@ -14,6 +14,10 @@ const softwareSchema = new Schema({
         type: String,
         required: true
     },
+    description:{
+        type: String,
+        required: true
+    },
     uploadedAt: {
         type: Date,
         default: Date.now
