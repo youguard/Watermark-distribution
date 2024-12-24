@@ -54,6 +54,7 @@ const getMessages = async (req, res) => {
         })
         .populate('sender', 'nickname')
         .populate('receiver', 'name')
+        .sort({ createdAt : -1 })
         if(!messages){
             return res.status(400).json({message: 'No messages found...'})
         }
