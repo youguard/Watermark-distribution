@@ -8,7 +8,7 @@ const signup = async(req, res) => {
         const { fullName, username, email, phoneNumber, password } = req.body
     const user = await User.findOne({ email })
     if(user){
-        res.status(400).json('User already exists...')
+        return res.status(400).json('User already exists...')
     }
     const salt = await bcrypt.genSalt(10)
     const hashedPassword = await bcrypt.hash(password, salt)
@@ -110,7 +110,7 @@ const forgotPassword = async (req, res) => {
         const { email } = req.body
         const user = await User.findOne(email)
         if(!user){
-            res.status(400).json({ message: 'User Not Found...'}) 
+            return res.status(400).json({ message: 'User Not Found...'}) 
         }
 
          // Generate reset token
