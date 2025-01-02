@@ -11,7 +11,7 @@ const signup = async(req, res) => {
         res.status(400).json('User already exists...')
     }
     const salt = await bcrypt.genSalt(10)
-    const hashedPassword = bcrypt.hash(password, sale)
+    const hashedPassword = await bcrypt.hash(password, salt)
 
     const newUser = new User({
         fullName,
@@ -60,8 +60,17 @@ const signup = async(req, res) => {
 
 const login = async(req, res) => {
     try{
-        const { email, password } = req.body
-        const user = await User.findOne({email})
+        const { usernameOrEmail, password } = req.body
+
+        let user;
+        if(usernameOrEmail.includes('@')){
+            //treat as email
+            user = await User.findOne({ email: usernameOrEmail.toLowerCase()})
+        } else {
+            // treat as username
+            user = await User.findOne({username: usernameOrEmail})
+        }
+
         if(!user){
             res.status(400).json({message: 'User Not Found...'})
         }
