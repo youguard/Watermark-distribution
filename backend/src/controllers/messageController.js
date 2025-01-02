@@ -139,5 +139,6 @@ const getMessageById = async (req, res) => {
 
 module.exports = {
     sendMessage,
-    getMessages
+    getMessages,
+    getMessageById
 }
