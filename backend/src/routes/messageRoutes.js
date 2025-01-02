@@ -68,8 +68,8 @@ const protect = require('../middlewares/authMiddleware')
  *       500:
  *         description: Internal Server Error
  */
-router.get('/messages', getMessages)
+router.get('/messages', protect, getMessages)
 
-router.post('/messages', sendMessage)
+router.post('/messages', protect, sendMessage)
 
-router.get('/messages/:id', getMessageById)
+router.get('/messages/:id', protect, getMessageById)
