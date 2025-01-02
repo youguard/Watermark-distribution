@@ -126,7 +126,7 @@ const uploadSoftware = async (req, res) => {
         // Save software details in the database
         const newSoftware = new Software({
             name: fileName,
-            version: req.body.version,
+            version: version,
             filePath: s3Response.Location,
             description
         });
