@@ -25,19 +25,21 @@ const userSchema = new Schema({
         required: true
     },
     region: {
+        type: String,
         enum: ['Region-A', 'Region-B', 'Region-C', 'Region-D', 'Region-E', 'Region-F'],
-        default: 'Region A'
+        default: 'Region-A'
     },
     createdAt: {
         type: Date,
         defaul: Date.now
     },
     role: {
+        type: String,
         enum: ['User', 'user'],
         default: 'User'
     }
 })
 
-const User = mongoose.Model('User', userSchema)
+const User = mongoose.model('User', userSchema)
 
 module.exports = User
