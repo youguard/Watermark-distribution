@@ -4,20 +4,17 @@ const Schema = mongoose.Schema
 
 const userSchema = new Schema({
     fullName: {
-        type: String,
-        required: true
+        type: String
     },
     username: {
-        type: String, 
-        required: true
+        type: String
     },
     email: {
         type: String,
         required: true
     },
     phoneNumber: {
-        type: String,
-        required: true
+        type: String
     },
     isApproved: {
         type: Boolean,
@@ -34,6 +31,10 @@ const userSchema = new Schema({
     createdAt: {
         type: Date,
         defaul: Date.now
+    },
+    role: {
+        enum: ['User', 'user'],
+        default: 'User'
     }
 })
 
