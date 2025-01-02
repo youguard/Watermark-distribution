@@ -1,6 +1,8 @@
 const express = require('express')
 const { json } = require('body-parser');
 const authRoutes = require('./routes/authRoutes')
+const messageRoutes = require('./routes/messageRoutes')
+const notificationRoutes = require('./routes/notificationRoutes')
 const bodyParser = require('body-parser')
 const connectDB = require('../src/config/db')
 const app = express();
@@ -14,6 +16,8 @@ app.use(express.urlencoded({ extended: true}))
 
 //routes
 app.use('/api', authRoutes)
+app.use('/api', messageRoutes)
+app.use('/api', notificationRoutes)
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
