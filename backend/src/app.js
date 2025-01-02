@@ -9,12 +9,21 @@ const bodyParser = require('body-parser')
 const connectDB = require('../src/config/db')
 const app = express();
 const { swaggerUi, swaggerDocs } = require('./config/swagger');
+const cors = require('cors')
 
 connectDB()
 
 app.use(express.json())
 app.use(bodyParser.json())
 app.use(express.urlencoded({ extended: true}))
+
+app.use(cors({
+    origin: "*",  // Allows all origins
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true  // If you need to send cookies or auth headers
+  }));
+  
 
 //routes
 app.use('/api', authRoutes)
