@@ -5,9 +5,13 @@ const router = require('express').Router()
 
 /**
  * @swagger
+ * tags:
+ *   name: Users
+ *   description: User management
  * /users:
  *   get:
  *     summary: Retrieve a list of users
+ *     tags: [Users]
  *     responses:
  *       200:
  *         description: A list of users
@@ -20,6 +24,7 @@ const router = require('express').Router()
  * /users/{id}:
  *   get:
  *     summary: Retrieve a single user by ID
+ *     tags: [Users]
  *     parameters:
  *       - in: path
  *         name: id
@@ -36,6 +41,7 @@ const router = require('express').Router()
  *               $ref: '#/components/schemas/User'
  *   patch:
  *     summary: Approve a user by ID
+ *     tags: [Users]
  *     parameters:
  *       - in: path
  *         name: id
@@ -52,6 +58,7 @@ const router = require('express').Router()
  *               $ref: '#/components/schemas/User'
  *   put:
  *     summary: Update a user by ID
+ *     tags: [Users]
  *     parameters:
  *       - in: path
  *         name: id
@@ -74,6 +81,7 @@ const router = require('express').Router()
  *               $ref: '#/components/schemas/User'
  *   delete:
  *     summary: Delete a user by ID
+ *     tags: [Users]
  *     parameters:
  *       - in: path
  *         name: id

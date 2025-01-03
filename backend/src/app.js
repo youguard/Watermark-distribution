@@ -1,6 +1,7 @@
 const express = require('express')
 const { json } = require('body-parser');
 const authRoutes = require('./routes/authRoutes')
+const adminAuthRoutes = require('./routes/adminAuthRoutes')
 const messageRoutes = require('./routes/messageRoutes')
 const notificationRoutes = require('./routes/notificationRoutes')
 const softwareRoutes = require('./routes/softwareRoutes')
@@ -29,6 +30,9 @@ app.use(cors({
 app.use('/api', authRoutes)
 app.use('/api', messageRoutes)
 app.use('/api', notificationRoutes)
+app.use('/api', adminAuthRoutes)
+app.use('/api', softwareRoutes)
+app.use('/api', userRoutes)
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 

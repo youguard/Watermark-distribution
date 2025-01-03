@@ -5,9 +5,13 @@ const protect = require('../middlewares/authMiddleware')
 
 /**
  * @swagger
+ * tags:
+ *   name: Software
+ *   description: Software management
  * /softwares:
  *   get:
  *     summary: Retrieve a list of softwares
+ *     tags: [Software]
  *     responses:
  *       200:
  *         description: A list of softwares
@@ -27,6 +31,7 @@ const protect = require('../middlewares/authMiddleware')
  * /softwares/{id}:
  *   get:
  *     summary: Retrieve a software by ID
+ *     tags: [Software]
  *     parameters:
  *       - in: path
  *         name: id
@@ -51,6 +56,7 @@ const protect = require('../middlewares/authMiddleware')
  * /softwares/new:
  *   post:
  *     summary: Upload a new software
+ *     tags: [Software]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -98,6 +104,7 @@ const protect = require('../middlewares/authMiddleware')
  * /softwares/download:
  *   get:
  *     summary: Download a software
+ *     tags: [Software]
  *     security:
  *       - bearerAuth: []
  *     responses:
