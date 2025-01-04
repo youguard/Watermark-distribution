@@ -35,7 +35,6 @@ const signup = async(req, res) => {
         Name: savedAdmin.name,
         Email: savedAdmin.email,
         Role: savedAdmin.role
-
     })
 
     res.status(201).json({
@@ -78,10 +77,13 @@ const login = async(req, res) => {
 
         const token = jwt.sign(payload, secretKey, options)
 
+        const role = admin.$assertPopulated
+
         res.status(200).json({
             success: true,
             message: 'Admin logged in successfully',
-            token
+            token,
+            role
         })
     }
     catch(err){

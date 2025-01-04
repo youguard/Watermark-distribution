@@ -38,7 +38,8 @@ const signup = async(req, res) => {
         Email: savedUser.email,
         Username: savedUser.username,
         PhoneNumber: savedUser.phoneNumber,
-        Approved: savedUser.isApproved
+        Approved: savedUser.isApproved,
+        Role: savedUser.role
 
     })
 
@@ -89,10 +90,13 @@ const login = async(req, res) => {
 
         const token = jwt.sign(payload, secretKey, options)
 
+        const userRole = user.role
+
         res.status(200).json({
             success: true,
             message: 'User logged in successfully',
-            token
+            token,
+            userRole
         })
     }
     catch(err){
