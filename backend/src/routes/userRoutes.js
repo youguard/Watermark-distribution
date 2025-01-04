@@ -104,6 +104,6 @@ router.patch('/users/:id', approveUser)
 router.patch('/users/:id', revokeUser)
 router.put('/users/:id', updateUser)
 router.delete('/users/:id', deleteUser)
-router.get('/user/details', getCurrentUser)
+router.get('/user/details', protect, getCurrentUser)
 
 module.exports = router
