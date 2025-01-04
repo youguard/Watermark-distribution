@@ -1,4 +1,4 @@
-const { getUsers, getUserById, approveUser, revokeUser, updateUser, deleteUser} = require('../controllers/userController')
+const { getUsers, getUserById, approveUser, revokeUser, updateUser, deleteUser, getCurrentUser} = require('../controllers/userController')
 const protect = require('../middlewares/authMiddleware')
 const router = require('express').Router()
 
@@ -96,6 +96,7 @@ const router = require('express').Router()
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/User'
+ * 
  */
 router.get('/users', getUsers)
 router.get('/users/:id', getUserById)
@@ -103,5 +104,6 @@ router.patch('/users/:id', approveUser)
 router.patch('/users/:id', revokeUser)
 router.put('/users/:id', updateUser)
 router.delete('/users/:id', deleteUser)
+router.get('/user/details', getCurrentUser)
 
 module.exports = router

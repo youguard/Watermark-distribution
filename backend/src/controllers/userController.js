@@ -160,11 +160,46 @@ const deleteUser = async (req, res) => {
     }
 }
 
+const getCurrentUser = async (req, res) => {
+    try{
+        const userId = req.user._id
+        const user = await User.findById(userId)
+
+        if(!user){
+            return res.status(400).json({ message: 'User Not Found...'})
+        }
+
+        const userDetails = {
+            Name: user.fullName,
+            Username: user.username,
+            Email: user.email,
+            PhoneNumber: user.phoneNumber,
+            Approval: user.isApproved,
+            Region: user.region,
+            Role: user.role
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'User details gotten',
+            userDetails
+        })
+    }
+    catch(err){
+        res.status(500).json({
+            success: false,
+            message: 'Internal Server Error',
+            error: err.message
+        })
+    }
+}
+
 module.exports = {
     getUsers,
     getUserById,
     approveUser,
     revokeUser,
     updateUser,
-    deleteUser
+    deleteUser,
+    getCurrentUser
 }
