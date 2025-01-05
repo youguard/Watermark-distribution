@@ -3,39 +3,47 @@ const User = require('../models/User');
 const Admin = require('../models/Admin');
 
 const protect = async (req, res, next) => {
-    try {
-        // Extract token from headers
-        const authHeader = req.headers.authorization;
-        if (!authHeader || !authHeader.startsWith('Bearer ')) {
-            return res.status(401).json({ message: 'No token provided. Unauthorized.' });
-        }
-        
-        const token = authHeader.split(' ')[1];
-
-        // Verify the token
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        
-        // Check if it's a user or admin
-        let account;
-        if (decoded.role === 'Admin') {
-            account = await Admin.findById(decoded.id);
-        } else if (decoded.role === 'User') {
-            account = await User.findById(decoded.id);
-        }
-
-        // If no account is found
-        if (!account) {
-            return res.status(404).json({ message: 'Account not found.' });
-        }
-
-        // Attach account to req object
-        req.user = account;
-        req.user.role = decoded.role; // Attach role to differentiate later
-
-        next();
-    } catch (err) {
-        res.status(401).json({ message: 'Invalid token. Unauthorized.', error: err.message });
+    let token;
+  
+    // Check if there's an Authorization header with a Bearer token
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+      token = req.headers.authorization.split(' ')[1];
     }
-};
+  
+    // If no token, proceed as a guest (allow browsing without authorization)
+    if (!token) {
+      return next();
+    }
+  
+    try {
+      // Verify the token
+      const decoded = jwt.verify(token, process.env.SECRETKEY);
+  
+      // Determine the user type and fetch the user object
+      let user;
+      if (decoded.userId) {
+        user = await User.findById(decoded.userId).select('-password');
+      } else if (decoded.partnerId) {
+        user = await Partner.findById(decoded.partnerId).select('-password');
+      } else if (decoded.adminId) {
+        user = await SuperAdmin.findById(decoded.adminId).select('-password');
+      }
+  
+      // Attach the user object to the request only if a valid user is found
+      if (user) {
+        req.user = user;
+      }
+
+      req.user.role = user.Role
+  
+    } catch (err) {
+      // If token is expired or invalid, simply allow guest access by doing nothing
+      return next();
+    }
+  
+    // Proceed with the request
+    next();
+  };
+  
 
 module.exports = protect;
