@@ -77,7 +77,7 @@ const login = async(req, res) => {
 
         const token = jwt.sign(payload, secretKey, options)
 
-        const role = admin.$assertPopulated
+        const role = admin.role
 
         res.status(200).json({
             success: true,
