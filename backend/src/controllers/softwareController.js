@@ -57,6 +57,12 @@ const getSoftwareById = async ( req, res) => {
 
 const downloadSoftware = async (req, res) => {
     try{
+        const softwareId = req.params.id
+        const software = await Software.findById(softwareId)
+        if(!software){
+            return res.status(400).json({ message: 'Software not found'})
+        }
+
         const userId = req.user._id
         const user = await User.findById(userId)
         if(!user){
@@ -102,16 +108,7 @@ const uploadSoftware = async (req, res) => {
         const { name, version, description} = req.body
 
         const file = req.file;
-        const fileExtension = path.extname(file.originalname).toLowerCase();
-
-        // Check allowed file extensions
-        const allowedExtensions = ['.apk', '.ios']; 
-        if (!allowedExtensions.includes(fileExtension)) {
-            return res.status(400).json({
-                success: false,
-                message: 'Invalid file type. Only APK and IOS files are allowed.',
-            });
-        }
+        
         const fileName = name
         // Upload to S3
         const params = {
@@ -148,7 +145,7 @@ const uploadSoftware = async (req, res) => {
         res.status(500).json({
             success: false,
             message: 'Failed to upload software.',
-            error: error.message,
+            error: error.message
         });
     }
 };
