@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const Admin = require('../models/User')
+const Admin = require('../models/Admin')
 const bcrypt = require('bcrypt')
 const dotenv = require('dotenv').config()
 
@@ -8,7 +8,7 @@ const signup = async(req, res) => {
         const { name, email, password } = req.body
     const admin = await Admin.findOne({ email })
     if(admin){
-        return res.status(400).json('User already exists...')
+        return res.status(400).json('Admin already exists...')
     }
     const salt = await bcrypt.genSalt(10)
     const hashedPassword = await bcrypt.hash(password, salt)
@@ -60,7 +60,7 @@ const login = async(req, res) => {
         const admin = await Admin.findOne({ email })
 
         if(!admin){
-            res.status(400).json({message: 'Admin Not Found...'})
+            return res.status(400).json({message: 'Admin Not Found...'})
         }
         const matchedPassword = await bcrypt.compare(password, admin.password)
         if(!matchedPassword){
