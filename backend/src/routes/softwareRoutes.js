@@ -124,6 +124,6 @@ const upload = require('../middlewares/uploadMiddleware')
 router.get('/softwares', getSoftwares)
 router.get('/softwares/:id', getSoftwareById)
 router.post('/softwares/new', upload.single('file'), protect, uploadSoftware)
-router.get('/softwares/download', protect, downloadSoftware)
+router.get('/softwares/download/:id', protect, downloadSoftware)
 
 module.exports = router
