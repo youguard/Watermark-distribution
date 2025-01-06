@@ -1,5 +1,5 @@
 const { signup, login, forgotPassword, resetPassword, changePassword} = require('../controllers/authController')
-const protect = require('../middlewares/authMiddleware')
+const {protect} = require('../middlewares/authMiddleware')
 const router = require('express').Router()
 
 /**

@@ -1,5 +1,5 @@
 const { signup, login, forgotPassword, resetPassword, changePassword} = require('../controllers/adminAuthController')
-const protect = require('../middlewares/authMiddleware')
+const {protect} = require('../middlewares/authMiddleware')
 const router = require('express').Router()
 
 /**
@@ -96,7 +96,7 @@ router.post('/admin/login', login)
  *       500:
  *         description: Internal server error
  */
-router.post('/admin/forgot-password', protect, forgotPassword)
+router.post('/admin/forgot-password', forgotPassword)
 
 /**
  * @swagger

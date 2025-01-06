@@ -1,6 +1,6 @@
 const { getNotificationById, getNotifications, newNotification, deleteNotification} = require('../controllers/notificationController')
 const router = require('express').Router()
-const protect = require('../middlewares/authMiddleware')
+const {protect, isAdmin} = require('../middlewares/authMiddleware')
 
 /**
  * @swagger

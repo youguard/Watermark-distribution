@@ -1,6 +1,6 @@
 const { sendMessage, getMessages, getMessageById} = require('../controllers/messageController')
 const router = require('express').Router()
-const protect = require('../middlewares/authMiddleware')
+const {protect} = require('../middlewares/authMiddleware')
 /**
  * @swagger
  * /messages:
