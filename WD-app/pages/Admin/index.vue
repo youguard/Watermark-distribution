@@ -3,26 +3,7 @@
     <NuxtLayout name="admindashboard">
         <div class="min-h-screen bg-gray-50">
             <!-- Top Navigation -->
-            <nav class="bg-white shadow-sm">
-                <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div class="flex justify-between h-16">
-                        <div class="flex items-center">
-                            <h1 class="text-xl font-semibold">Admin Dashboard</h1>
-                        </div>
-                        <div class="flex items-center space-x-4">
-                            <button class="p-2 rounded-full hover:bg-gray-100">
-                                <!-- <Icon name="heroicons:bell" class="h-6 w-6 text-gray-500" /> -->
-                            </button>
-                            <div class="flex items-center space-x-2">
-                                <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center">
-                                    <span class="text-white text-sm">AD</span>
-                                </div>
-                                <span class="text-sm font-medium">Admin</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </nav>
+
 
             <!-- Main Content -->
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -47,14 +28,21 @@
                         <div class="p-6">
                             <div class="flex justify-between items-center mb-4">
                                 <h2 class="text-lg font-medium">Current Announcement</h2>
-                                <button class="text-sm text-blue-500 hover:text-blue-600">Edit</button>
+                                <button class="text-sm text-blue-500 hover:text-blue-600" @click="toggleEdit">
+                                    {{ isEditing ? 'Save' : 'Edit' }}
+                                </button>
                             </div>
-                            <div class="bg-gray-50 rounded-lg p-4">
-                                <p class="text-gray-600">{{ currentAnnouncement }}</p>
+                            <div class="bg-gray-50 rounded-lg p-4 space-y-4">
+                                <input type="text"
+                                    class="w-full bg-gray-100 rounded-lg p-2 text-gray-600 focus:bg-white focus:outline-none"
+                                    :disabled="!isEditing" v-model="announcementTitle" placeholder="Enter title" />
+                                <textarea
+                                    class="w-full bg-gray-100 rounded-lg p-2 text-gray-600 resize-none focus:bg-white focus:outline-none"
+                                    :disabled="!isEditing" v-model="announcementContent" rows="4"
+                                    placeholder="Enter announcement content"></textarea>
                             </div>
                         </div>
                     </div>
-
                     <!-- Regional Distribution -->
                     <div class="bg-white rounded-lg shadow">
                         <div class="p-6">
@@ -75,9 +63,9 @@
                     </div>
                 </div>
 
-               <div class="mt-10">
-                <UserTable />
-               </div>
+                <div class="mt-10">
+                    <UserTable />
+                </div>
             </div>
         </div>
     </NuxtLayout>
@@ -85,25 +73,122 @@
 </template>
 
 <script setup>
+import axios from 'axios';
+import { ref, computed, onMounted } from 'vue';
+
+definePageMeta({
+    middleware: 'auth',
+});
+
+// Reactive stats
 const stats = ref([
-    { title: 'Total Users', value: '2,345', change: '+12%', status: 'increase' },
-    { title: 'Pending Approvals', value: '48', change: '+5%', status: 'increase' },
-    { title: 'Active Members', value: '1,892', change: '-2%', status: 'decrease' },
-    { title: 'Downloads', value: '156', change: '+8%', status: 'increase' }
+    { title: 'Total Users', value: '0', change: 'N/A', status: '' },
+    { title: 'Pending Approvals', value: '0', change: 'N/A', status: '' },
+    { title: 'Active Members', value: '0', change: 'N/A', status: '' },
+    { title: 'Downloads', value: '0', change: '+8%', status: 'increase' }, // Assuming static for now
 ]);
 
-const regions = ref([
-    { name: 'Region 1', users: 425 },
-    { name: 'Region 2', users: 385 },
-    { name: 'Region 3', users: 356 },
-    { name: 'Region 4', users: 289 },
-    { name: 'Region 5', users: 248 },
-    { name: 'Region 6', users: 189 }
-]);
+// Regions data (dynamically updated based on users data)
+const regions = ref([]);
 
-const currentAnnouncement = ref('Latest software update v2.1.0 is now available. All users must update their applications by the end of this month.');
+// Reactive state for title and content
+const announcementTitle = ref('Important Update');
+const announcementContent = ref(
+    'Latest software update v2.1.0 is now available. All users must update their applications by the end of this month.'
+);
+
+// State to track edit mode
+const isEditing = ref(false);
+
+// Toggle editing mode
+const toggleEdit = async () => {
+    if (isEditing.value) {
+        await saveAnnouncement();
+    }
+    isEditing.value = !isEditing.value;
+};
+
+// Save the updated announcement
+const saveAnnouncement = async () => {
+    try {
+        const token = localStorage.getItem('accessToken');
+        const requestBody = {
+            title: announcementTitle.value,
+            content: announcementContent.value,
+        };
+        const response = await axios.post(
+            'https://watermark-distribution.onrender.com/api/notifications/new',
+            requestBody,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        alert('Announcement updated successfully!');
+        console.log(response.data);
+    } catch (error) {
+        console.error('Error saving announcement:', error);
+        alert('Failed to update announcement.');
+    }
+};
+
 
 const maxUsers = computed(() => {
-    return Math.max(...regions.value.map(region => region.users));
+    return Math.max(...regions.value.map(region => region.users || 0));
 });
+
+const fetchUsers = async () => {
+    try {
+        const token = localStorage.getItem('accessToken');
+        const response = await axios.get(
+            'https://watermark-distribution.onrender.com/api/users',
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        const users = response.data.users; // Assuming the response contains an array of users
+        console.log(users);
+
+        // Calculate stats
+        const totalUsers = users.length;
+        const pendingApprovals = users.filter(user => !user.approved).length;
+        const activeMembers = users.filter(user => user.approved).length;
+
+        // Update stats
+        stats.value[0].value = totalUsers.toString();
+        stats.value[1].value = pendingApprovals.toString();
+        stats.value[2].value = activeMembers.toString();
+
+        // Calculate regions
+        const regionCounts = {};
+        users.forEach(user => {
+            if (user.region) {
+                if (!regionCounts[user.region]) {
+                    regionCounts[user.region] = 0;
+                }
+                regionCounts[user.region] += 1;
+            }
+        });
+
+        // Update regions array
+        regions.value = Object.entries(regionCounts).map(([name, userCount]) => ({
+            name,
+            users: userCount,
+        }));
+
+        // Example of dynamic stats changes (optional)
+        stats.value[1].change = pendingApprovals > 50 ? '+5%' : '-2%';
+        stats.value[1].status = pendingApprovals > 50 ? 'increase' : 'decrease';
+        stats.value[2].change = activeMembers > 1000 ? '+10%' : '-5%';
+        stats.value[2].status = activeMembers > 1000 ? 'increase' : 'decrease';
+    } catch (error) {
+        console.error('Error fetching users:', error);
+    }
+};
+
+// Fetch data on component mount
+onMounted(fetchUsers);
 </script>

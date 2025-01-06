@@ -22,7 +22,7 @@
             </div>
 
             <!-- Table -->
-            <div class="bg-white rounded-lg shadow">
+            <div class="bg-white rounded-lg ">
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
@@ -123,6 +123,9 @@
 </template>
 
 <script setup>
+import { ref, computed, onMounted } from 'vue';
+import axios from 'axios';
+
 const searchQuery = ref('');
 const selectedRegion = ref('');
 const currentPage = ref(1);
@@ -140,19 +143,33 @@ const headers = [
 
 const regions = ['Region 1', 'Region 2', 'Region 3', 'Region 4', 'Region 5', 'Region 6'];
 
-// Sample user data
-const users = ref([
-    {
-        id: 1,
-        name: 'John Doe',
-        nickname: 'johnd',
-        email: 'john@example.com',
-        phone: '+1234567890',
-        region: 'Region 1',
-        status: 'Approved'
-    },
-    // Add more sample users here
-]);
+const users = ref([]);
+
+const fetchUsers = async () => {
+    try {
+        const token = localStorage.getItem('accessToken');
+        const response = await axios.get('https://watermark-distribution.onrender.com/api/users', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        // Transform the API response to match your requirements
+        users.value = response.data.users.map(user => ({
+            id: user.id,
+            name: user.fullName || 'N/A',
+            nickname: user.username || 'N/A',
+            email: user.email || 'N/A',
+            phone: user.phone || 'N/A', // Handle missing phone number
+            region: user.region || 'N/A',
+            status: user.approved ? 'Approved' : 'Pending', // Map 'Approved' to 'status'
+        }));
+    } catch (error) {
+        console.error('Error fetching users:', error);
+    }
+};
+
+onMounted(fetchUsers);
 
 // Filter and sort users
 const filteredUsers = computed(() => {
@@ -198,8 +215,6 @@ const getStatusClass = (status) => {
             return 'bg-green-100 text-green-700';
         case 'Pending':
             return 'bg-yellow-100 text-yellow-700';
-        case 'Revoked':
-            return 'bg-red-100 text-red-700';
         default:
             return 'bg-gray-100 text-gray-700';
     }
@@ -215,18 +230,14 @@ const sortBy = (column) => {
 };
 
 const toggleApproval = (user) => {
-    user.status = user.status === 'Approved' ? 'Revoked' : 'Approved';
+    user.status = user.status === 'Approved' ? 'Pending' : 'Approved';
 };
 
 const editUser = (user) => {
-    // Implement edit functionality
     console.log('Edit user:', user);
 };
 
 const messageUser = (user) => {
-    // Implement message functionality
     console.log('Message user:', user);
 };
 </script>
-
-<style></style>

@@ -10,11 +10,11 @@
                         <span class="ml-2 text-xl font-semibold text-gray-800">WaterMark Distribution</span>
                     </div>
                     <div class="flex items-center space-x-4">
-                        <NuxtLink to="/login"
+                        <NuxtLink to="/signin"
                             class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-lg text-sm font-medium">
                             Login
                         </NuxtLink>
-                        <NuxtLink to="/register"
+                        <NuxtLink to="/signup"
                             class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
                             Register
                         </NuxtLink>
@@ -66,10 +66,7 @@
                             class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
                             Get Started
                         </NuxtLink>
-                        <NuxtLink to="/login"
-                            class="text-gray-600 hover:text-gray-900 px-6 py-3 rounded-lg font-medium">
-                            Sign In
-                        </NuxtLink>
+                     
                     </div>
                 </div>
                 <div class="relative">
