@@ -22,7 +22,7 @@ const getUsers = async (req, res) => {
 
 const getUserById = async (req, res) => {
     try{
-        const userId = req.params
+        const userId = req.params.id
         const user  = await User.findById(userId)
         if(!user){
             return res.status(400).json({ message: 'User not found....'})
