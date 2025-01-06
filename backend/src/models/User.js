@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const { deflateSync } = require('zlib')
 const Schema = mongoose.Schema
+const Region = require('./Region')
 
 const userSchema = new Schema({
     fullName: {
@@ -24,14 +25,13 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
-    region: {
-        type: String,
-        enum: ['Region-A', 'Region-B', 'Region-C', 'Region-D', 'Region-E', 'Region-F'],
-        default: 'Region-A'
-    },
     createdAt: {
         type: Date,
         defaul: Date.now
+    },
+    region: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'Region'
     },
     role: {
         type: String,
