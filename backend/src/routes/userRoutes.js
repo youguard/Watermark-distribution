@@ -1,5 +1,5 @@
 const { getUsers, getUserById, approveUser, revokeUser, updateUser, deleteUser, getCurrentUser} = require('../controllers/userController')
-const protect = require('../middlewares/authMiddleware')
+const {protect, isAdmin} = require('../middlewares/authMiddleware')
 const router = require('express').Router()
 
 
@@ -98,12 +98,12 @@ const router = require('express').Router()
  *               $ref: '#/components/schemas/User'
  * 
  */
-router.get('/users', getUsers)
-router.get('/users/:id', getUserById)
-router.patch('/users/:id', approveUser)
-router.patch('/users/:id', revokeUser)
-router.put('/users/:id', updateUser)
-router.delete('/users/:id', deleteUser)
-router.get('/user/details', protect, getCurrentUser)
+router.get('/users', protect, getUsers)
+router.get('/users/:id', protect, getUserById)
+router.patch('/users/:id', protect, isAdmin, approveUser)
+router.patch('/users/:id', protect, isAdmin, revokeUser)
+router.put('/users/:id', protect, updateUser)
+router.delete('/users/:id', protect, isAdmin, deleteUser)
+router.get('/user/details', protect, protect, getCurrentUser)
 
 module.exports = router

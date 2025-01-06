@@ -118,9 +118,9 @@ const protect = require('../middlewares/authMiddleware')
  *         description: Internal Server Error
  */
 
-router.get('/notifications', getNotifications)
-router.get('/notifications/:id', getNotificationById)
-router.post('/notifications/new', protect, newNotification)
-router.delete('/notification/:id', deleteNotification)
+router.get('/notifications',protect, getNotifications)
+router.get('/notifications/:id', protect, getNotificationById)
+router.post('/notifications/new', protect, isAdmin, newNotification)
+router.delete('/notification/:id', protect, isAdmin, deleteNotification)
 
 module.exports = router;

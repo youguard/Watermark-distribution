@@ -1,6 +1,6 @@
 const { getSoftwares, getSoftwareById, downloadSoftware, uploadSoftware } = require('../controllers/softwareController')
 const router = require('express').Router()
-const protect = require('../middlewares/authMiddleware')
+const {protect, isAdmin} = require('../middlewares/authMiddleware')
 const upload = require('../middlewares/uploadMiddleware')
 /**
  * @swagger
@@ -121,9 +121,9 @@ const upload = require('../middlewares/uploadMiddleware')
  *                 downloadUrl:
  *                   type: string
  */
-router.get('/softwares', getSoftwares)
-router.get('/softwares/:id', getSoftwareById)
-router.post('/softwares/new', upload.single('file'), protect, uploadSoftware)
+router.get('/softwares', protect, getSoftwares)
+router.get('/softwares/:id', protect, getSoftwareById)
+router.post('/softwares/new', upload.single('file'), protect, isAdmin, uploadSoftware)
 router.get('/softwares/download/:id', protect, downloadSoftware)
 
 module.exports = router

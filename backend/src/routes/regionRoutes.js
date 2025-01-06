@@ -1,6 +1,6 @@
 const { newRegion, getRegions, deleteRegion } = require('../controllers/regionController')
 const router = require('express').Router()
-const protect = require('../middlewares/authMiddleware')
+const { protect, isAdmin } = require('../middlewares/authMiddleware')
 /**
  * @swagger
  * tags:
@@ -111,5 +111,5 @@ const protect = require('../middlewares/authMiddleware')
  */
 
 router.get('/regions', protect, getRegions)
-router.post('/regions/new', protect, newRegion)
-router.delete('/regions/:id', protect, deleteRegion)
+router.post('/regions/new', protect, isAdmin, newRegion)
+router.delete('/regions/:id', protect, isAdmin, deleteRegion)
