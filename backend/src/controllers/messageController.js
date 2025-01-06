@@ -32,9 +32,9 @@ const sendMessage = async (req, res) => {
         }
 
         const message = new Message({
-            sender,
+            sender: sender._id,
             senderType,
-            receiver,
+            receiver: receiver._id,
             receiverType,
             content,
         });

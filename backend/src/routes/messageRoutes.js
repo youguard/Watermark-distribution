@@ -70,7 +70,7 @@ const {protect} = require('../middlewares/authMiddleware')
  */
 router.get('/messages', protect, getMessages)
 
-router.post('/messages', protect, sendMessage)
+router.post('/messages/:id', protect, sendMessage)
 
 router.get('/messages/:id', protect, getMessageById)
 
