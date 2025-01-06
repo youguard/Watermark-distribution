@@ -5,7 +5,7 @@ const dotenv = require('dotenv').config()
 
 const signup = async(req, res) => {
     try{
-        const { fullName, username, email, phoneNumber, password } = req.body
+        const { fullName, username, email, phoneNumber, password, region } = req.body
     const user = await User.findOne({ email })
     if(user){
         return res.status(400).json('User already exists...')
@@ -18,7 +18,8 @@ const signup = async(req, res) => {
         username,
         email,
         phoneNumber,
-        password: hashedPassword
+        password: hashedPassword,
+        region
     })
 
     const savedUser = await newUser.save()
@@ -39,6 +40,7 @@ const signup = async(req, res) => {
         Username: savedUser.username,
         PhoneNumber: savedUser.phoneNumber,
         Approved: savedUser.isApproved,
+        Region: savedUser.region,
         Role: savedUser.role
 
     })
