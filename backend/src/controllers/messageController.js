@@ -16,14 +16,21 @@ const sendMessage = async (req, res) => {
         let sender, senderType, receiver, receiverType;
 
         if (isAdmin) {
+            // Admin sends a message to a user (id in params)
+            const userIdInParams = req.params.id;
+            if (!userIdInParams) {
+                return res.status(400).json({ message: 'Receiver user ID is required' });
+            }
+
             sender = await Admin.findById(userId);
             senderType = 'Admin';
-            receiver = await User.findById(req.params.id); // user id parsed in the params sent
+            receiver = await User.findById(userIdInParams);
             receiverType = 'User';
         } else {
+            // User sends a message to the admin
             sender = await User.findById(userId);
             senderType = 'User';
-            receiver = await Admin.findOne();
+            receiver = await Admin.findOne(); // Assumes there's only one admin
             receiverType = 'Admin';
         }
 
@@ -54,6 +61,7 @@ const sendMessage = async (req, res) => {
         });
     }
 };
+
 
 const getMessages = async (req, res) => {
     try {
