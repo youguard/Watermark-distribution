@@ -87,7 +87,8 @@ const approveUser = async (req, res) => {
             Name: user.fullName,
             Username: user.username,
             Region: user.region,
-            PhoneNumber: user.phoneNumber
+            PhoneNumber: user.phoneNumber,
+            Approval: user.isApproved
         }
 
         res.status(200).json({
@@ -107,7 +108,7 @@ const approveUser = async (req, res) => {
 
 const revokeUser = async (req, res) => {
     try{
-        const userId = req.params
+        const userId = req.params.id
         const user = await User.findById(userId)
         if(!user){
             return res.status(400).json({ message: 'User not found...'})
@@ -122,10 +123,11 @@ const revokeUser = async (req, res) => {
             Name: user.fullName,
             Username: user.username,
             Region: user.region,
-            PhoneNumber: user.phoneNumber
+            PhoneNumber: user.phoneNumber,
+            Approval: user.isApproved
         }
 
-        res.staus(200).json({
+        res.status(200).json({
             success: true,
             message: 'User access revoked successfully',
             userDetails

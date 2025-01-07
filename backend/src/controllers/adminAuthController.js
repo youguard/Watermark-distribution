@@ -64,7 +64,7 @@ const login = async(req, res) => {
         }
         const matchedPassword = await bcrypt.compare(password, admin.password)
         if(!matchedPassword){
-            res.status(400).json({ message: 'Incorrect Credentials.. Please try again.'})
+            return res.status(400).json({ message: 'Incorrect Credentials.. Please try again.'})
         }
 
         const payload = {
