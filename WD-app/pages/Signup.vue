@@ -217,6 +217,9 @@
 </template>
 
 <script>
+import axios from 'axios';
+
+
 export default {
     data() {
         return {
@@ -232,21 +235,17 @@ export default {
         async signup() {
             try {
                 this.isLoading = true;
-                const response = await fetch('https://watermark-distribution.onrender.com/api/user/signup', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        fullname: this.fullname,
-                        username: this.username,
-                        email: this.email,
-                        phonenumber: this.phonenumber,
-                        password: this.password
-                    })
+                const response = await axios.post('https://watermark-distribution.onrender.com/api/user/signup', {
+
+                    fullName: this.fullname,
+                    username: this.username,
+                    email: this.email,
+                    phoneNumber: this.phonenumber,
+                    password: this.password
+
                 })
 
-                const data = await response.json()
+                const data = await response.data
                 alert(data.message);
                 navigateTo('/signin')
                 console.log(data)

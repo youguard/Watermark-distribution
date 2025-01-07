@@ -73,7 +73,7 @@
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span
                                         :class="`px-2 py-1 text-xs font-medium rounded-full ${getStatusClass(user.status)}`">
-                                        {{ user.status }}
+                                        {{ user.status ? 'Approved' : 'Pending' }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -156,13 +156,13 @@ const fetchUsers = async () => {
 
         // Transform the API response to match your requirements
         users.value = response.data.users.map(user => ({
-            id: user.id,
+            id: user._id,
             name: user.fullName || 'N/A',
             nickname: user.username || 'N/A',
             email: user.email || 'N/A',
             phone: user.phone || 'N/A', // Handle missing phone number
             region: user.region || 'N/A',
-            status: user.approved ? 'Approved' : 'Pending', // Map 'Approved' to 'status'
+            status: user.isApproved , // Map 'Approved' to 'status'
         }));
     } catch (error) {
         console.error('Error fetching users:', error);
@@ -229,9 +229,40 @@ const sortBy = (column) => {
     }
 };
 
-const toggleApproval = (user) => {
-    user.status = user.status === 'Approved' ? 'Pending' : 'Approved';
+const toggleApproval = async (user) => {
+    console.log(user);
+    const id = user.id;
+    const currentStatus = user.isApproved
+    
+    try {
+        const token = localStorage.getItem('accessToken');
+
+        // Toggle approval status
+        const updatedStatus = !currentStatus;
+
+        const response = await axios.patch(
+            `https://watermark-distribution.onrender.com/api/users/${id}`,
+            { isApproved: updatedStatus }, // Update the `approved` field
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+
+        // Update the `users` array with the updated user data
+        users.value = users.value.map((user) =>
+            user.id === id ? { ...user, isApproved: updatedStatus } : user
+        );
+
+        console.log(response);
+        
+        console.log(`User ${id} approval status changed to: ${updatedStatus}`);
+    } catch (error) {
+        console.error('Error toggling user approval status:', error);
+    }
 };
+
 
 const editUser = (user) => {
     console.log('Edit user:', user);

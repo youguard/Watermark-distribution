@@ -10,13 +10,17 @@
                 </div>
 
                 <!-- Loop through messages -->
-                <div v-for="message in messages" :key="message._id" :class="`p-3 rounded-lg text-sm ${message.senderType === 'Admin' ? 'bg-blue-50 text-blue-900' : 'bg-gray-50 text-gray-900'
-                    }`">
+                <div v-for="message in messages" :key="message._id" :class="`p-3 rounded-lg text-sm ${message.senderType === 'User' ? 'bg-blue-50 text-blue-900' : 'bg-gray-50 text-gray-900'
+                    } flex flex-col space-y-2`">
                     <!-- Header for sender and time -->
                     <div class="flex justify-between items-start mb-1">
+                        <!-- Sender name -->
                         <span class="font-medium">
-                            {{ message.senderType === 'Admin' ? message.receiver.name : 'You' }}
+
+                            {{ message.senderType === 'User' ? 'You' : 'Admin' }}
                         </span>
+
+                        <!-- Message time -->
                         <span class="text-xs text-gray-500">
                             {{ formatDate(message.createdAt) }}
                         </span>
@@ -25,6 +29,7 @@
                     <!-- Message content -->
                     <div>{{ message.content }}</div>
                 </div>
+
             </div>
 
 
@@ -53,17 +58,20 @@ const newMessage = ref('');
 const messages = ref([]);
 
 
-const fetchMessages = async () => {
+const fetchMessages = async (id) => {
     try {
-        const { data } = await axios.get(
-            "https://watermark-distribution.onrender.com/api/messages",
+        console.log("UserIDD", id)
+        const data = await axios.get(
+            `https://watermark-distribution.onrender.com/api/messages/${id}`,
             {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("accessToken")}`, // Use token for protected endpoint
                 },
             }
         );
-        messages.value = data.messages;
+        messages.value = data.data.messages;
+        console.log("User chatss", messages.value || []);
+
     } catch (error) {
         console.error("Error fetching messages:", error);
     }
@@ -103,7 +111,7 @@ const sendMessage = async () => {
 
         // Make the API request with the token in the headers
         await axios.post(
-            'https://watermark-distribution.onrender.com/api/messages',
+            `https://watermark-distribution.onrender.com/api/messages/${userDetails}`,
             { content: messageContent },
             {
                 headers: {
@@ -119,10 +127,33 @@ const sendMessage = async () => {
     }
 };
 
+const userDetails = ref({})
 
+
+const fetchUserDetails = async () => {
+    try {
+        const token = localStorage.getItem("accessToken")
+        const response = await axios.get('https://watermark-distribution.onrender.com/api/user/details',
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
+        userDetails.value = response.data.userDetails.ID;
+        const id = response.data.userDetails.ID
+        await fetchMessages(id)
+        console.log("User details", id);
+
+    } catch (err) {
+        console.error(err);
+
+    }
+}
 
 // Fetch messages on mount
-onMounted(fetchMessages);
+// onMounted(fetchMessages);
+onMounted(fetchUserDetails)
 
 </script>
 

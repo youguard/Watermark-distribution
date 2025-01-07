@@ -4,7 +4,7 @@
             <Sidebar />
         </div>
         <div class="md:ml-64">
-            <nav class="bg-white shadow-sm">
+            <nav class="bg-white shadow-sm fixed w-[84%] top-0">
                 <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between h-16">
                         <div class="flex items-center">
@@ -24,7 +24,9 @@
                     </div>
                 </div>
             </nav>
-            <slot />
+            <div class="pt-16">
+                <slot />
+            </div>
         </div>
     </main>
 </template>

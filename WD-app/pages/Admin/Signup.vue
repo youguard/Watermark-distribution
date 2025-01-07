@@ -150,7 +150,7 @@ export default {
             try {
                 this.isLoading = true;
                 const response = await axios.post('https://watermark-distribution.onrender.com/api/admin/signup', {
-                    Name: this.name,
+                    name: this.name,
                     email: this.email,
                     password: this.password
                 })
