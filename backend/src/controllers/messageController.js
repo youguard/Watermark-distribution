@@ -145,8 +145,47 @@ const getMessageById = async (req, res) => {
     }
 };
 
+const getMessagesByUser = async (req, res) => {
+    try {
+        const userId = req.user._id;
+
+        if (!userId) {
+            return res.status(400).json({ message: 'User ID is required' });
+        }
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Find messages where the user is either the sender or the receiver, sorted by oldest first
+        const messages = await Message.find({
+            $or: [
+                { sender: userId },
+                { receiver: userId },
+            ],
+        })
+            .sort({ createdAt: 1 }) // Oldest messages first
+            .select('content createdAt');
+
+        res.status(200).json({
+            success: true,
+            message: 'Messages retrieved successfully',
+            messages
+        });
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: 'Internal Server Error',
+            error: err.message,
+        });
+    }
+};
+
+
 module.exports = {
     sendMessage,
     getMessages,
-    getMessageById
+    getMessageById,
+    getMessagesByUser
 }

@@ -1,6 +1,7 @@
-const { sendMessage, getMessages, getMessageById} = require('../controllers/messageController')
+const { sendMessage, getMessages, getMessageById, getMessagesByUser} = require('../controllers/messageController')
 const router = require('express').Router()
 const {protect} = require('../middlewares/authMiddleware')
+
 /**
  * @swagger
  * /messages:
@@ -67,6 +68,25 @@ const {protect} = require('../middlewares/authMiddleware')
  *         description: Message not found
  *       500:
  *         description: Internal Server Error
+ * /messages/user:
+ *   get:
+ *     summary: Retrieve messages by user
+ *     tags: [Messages]
+ *     responses:
+ *       200:
+ *         description: Messages retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Message'
+ *       400:
+ *         description: User ID is required
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal Server Error
  */
 router.get('/messages', protect, getMessages)
 
@@ -75,5 +95,7 @@ router.post('/messages/:id', protect, sendMessage)
 router.post('/messages', protect, sendMessage)
 
 router.get('/messages/:id', protect, getMessageById)
+
+router.get('/messages/user', protect, getMessagesByUser)
 
 module.exports = router
