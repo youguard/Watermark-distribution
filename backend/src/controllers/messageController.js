@@ -166,7 +166,7 @@ const getMessagesByUser = async (req, res) => {
             ],
         })
             .sort({ createdAt: 1 }) // Oldest messages first
-            .select('content createdAt');
+            .select('content senderType createdAt');
 
         res.status(200).json({
             success: true,
