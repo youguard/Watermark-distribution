@@ -1,6 +1,6 @@
 const { sendMessage, getMessages, getMessageById, getMessagesByUser} = require('../controllers/messageController')
 const router = require('express').Router()
-const {protect} = require('../middlewares/authMiddleware')
+const { protect } = require('../middlewares/authMiddleware')
 
 /**
  * @swagger
@@ -94,8 +94,6 @@ router.post('/messages/:id', protect, sendMessage)
 
 router.post('/messages', protect, sendMessage)
 
-router.get('/messages/:id', protect, getMessageById)
-
-router.get('/messages/user', protect, getMessagesByUser)
+router.get('/messages/:id', protect, getMessagesByUser)
 
 module.exports = router

@@ -147,7 +147,7 @@ const getMessageById = async (req, res) => {
 
 const getMessagesByUser = async (req, res) => {
     try {
-        const userId = req.user._id;
+        const userId = req.params.id;
 
         if (!userId) {
             return res.status(400).json({ message: 'User ID is required' });
