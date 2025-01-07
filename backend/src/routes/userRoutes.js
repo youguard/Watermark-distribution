@@ -39,6 +39,7 @@ const router = require('express').Router()
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/User'
+ * /users/{id}/approve:
  *   patch:
  *     summary: Approve a user by ID
  *     tags: [Users]
@@ -100,8 +101,8 @@ const router = require('express').Router()
  */
 router.get('/users', protect, getUsers)
 router.get('/users/:id', protect, getUserById)
-router.patch('/users/:id', protect, isAdmin, approveUser)
-router.patch('/users/:id', protect, isAdmin, revokeUser)
+router.patch('/users/:id/approve', protect, isAdmin, approveUser)
+router.patch('/users/:id/revoke', protect, isAdmin, revokeUser)
 router.put('/users/:id', protect, updateUser)
 router.delete('/users/:id', protect, isAdmin, deleteUser)
 router.get('/user/details', protect, protect, getCurrentUser)
