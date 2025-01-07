@@ -178,7 +178,8 @@ const getCurrentUser = async (req, res) => {
             PhoneNumber: user.phoneNumber,
             Approval: user.isApproved,
             Region: user.region,
-            Role: user.role
+            Role: user.role,
+            ID: user._id
         }
 
         res.status(200).json({
