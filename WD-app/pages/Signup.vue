@@ -3,7 +3,7 @@
         <section class="bg-white">
             <div class="grid grid-cols-1 lg:grid-cols-2">
                 <div
-                    class="relative flex items-end px-4 pb-10 pt-60 sm:pb-16 md:justify-center lg:pb-24 bg-gray-50 sm:px-6 lg:px-8">
+                    class="relative hidden md:flex items-end px-4 pb-10 pt-60 sm:pb-16 md:justify-center lg:pb-24 bg-gray-50 sm:px-6 lg:px-8">
                     <div class="absolute inset-0">
                         <img class="object-cover w-full h-full"
                             src="https://cdn.rareblocks.xyz/collection/celebration/images/signup/4/girl-working-on-laptop.jpg"
@@ -14,14 +14,14 @@
                 </div>
 
                 <div class="flex items-center justify-center px-4 py-10 bg-white sm:px-6 lg:px-8 sm:py-16 lg:py-24">
-                    <div class="xl:w-full xl:max-w-sm 2xl:max-w-md xl:mx-auto">
+                    <div class="xl:w-full xl:max-w-sm w-full xl:mx-auto">
                         <h2 class="text-3xl font-bold leading-tight text-black sm:text-4xl">Sign up</h2>
-                        <p class="mt-2 text-base text-gray-600">Already have an account? <a href="#" title=""
-                                class="font-medium text-blue-600 transition-all duration-200 hover:text-blue-700 focus:text-blue-700 hover:underline">Login</a>
+                        <p class="mt-2 text-base text-gray-600">Already have an account? <NuxtLink to="/signin" title=""
+                                class="font-medium text-blue-600 transition-all duration-200 hover:text-blue-700 focus:text-blue-700 hover:underline">Login</NuxtLink>
                         </p>
 
                         <form action="#" method="POST" class="mt-8">
-                            <div class="space-y-5 grid grid-cols-1 gap-6 md:grid-cols-2">
+                            <div class=" grid grid-cols-1 gap-6 md:grid-cols-2">
                                 <div class="col-span-2">
                                     <label for="" class="text-base font-medium text-gray-900"> Fullname </label>
                                     <div class="mt-2.5 relative text-gray-400 focus-within:text-gray-600">
@@ -40,7 +40,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col">
+                                <div class="col-span-2 md:col">
                                     <label for="" class="text-base font-medium text-gray-900"> Username </label>
                                     <div class="mt-2.5 relative text-gray-400 focus-within:text-gray-600">
                                         <div
@@ -58,7 +58,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col">
+                                <div class="col-span-2 md:col">
                                     <label for="" class="text-base font-medium text-gray-900"> Email address </label>
                                     <div class="mt-2.5 relative text-gray-400 focus-within:text-gray-600">
                                         <div
@@ -128,9 +128,9 @@
                                     </div>
                                 </div>
 
-                                <div>
+                                <div class="w-full">
                                     <button type="button"
-                                        class="inline-flex items-center justify-center w-full px-4 py-4 text-base font-semibold text-white transition-all duration-200 border border-transparent rounded-md bg-gradient-to-r from-fuchsia-600 to-blue-600 focus:outline-none hover:opacity-80 focus:opacity-80"
+                                        class="md:inline-flex items-center justify-center w-full px-4 py-4 text-base font-semibold text-white transition-all duration-200 border border-transparent rounded-md bg-gradient-to-r from-fuchsia-600 to-blue-600 focus:outline-none hover:opacity-80 focus:opacity-80"
                                         @click="signup">
                                         <span v-if="isLoading" class="mr-2">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em"
@@ -159,7 +159,7 @@
                         </form>
 
 
-
+<!-- 
                         <p class="mt-5 text-sm text-gray-600">
                             This site is protected by reCAPTCHA and the Google <a href="#" title=""
                                 class="text-blue-600 transition-all duration-200 hover:underline hover:text-blue-700">Privacy
@@ -167,7 +167,7 @@
                             <a href="#" title=""
                                 class="text-blue-600 transition-all duration-200 hover:underline hover:text-blue-700">Terms
                                 of Service</a>
-                        </p>
+                        </p> -->
                     </div>
                 </div>
             </div>

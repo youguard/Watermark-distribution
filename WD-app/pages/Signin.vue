@@ -3,7 +3,7 @@
         <section class="bg-white">
             <div class="grid grid-cols-1 lg:grid-cols-2">
                 <div
-                    class="relative flex items-end px-4 pb-10 pt-60 sm:pb-16 md:justify-center lg:pb-24 bg-gray-50 sm:px-6 lg:px-8">
+                    class="relative hidden md:flex items-end px-4 pb-10 pt-60 sm:pb-16 md:justify-center lg:pb-24 bg-gray-50 sm:px-6 lg:px-8">
                     <div class="absolute inset-0">
                         <img class="object-cover w-full h-screen"
                             src="https://cdn.rareblocks.xyz/collection/celebration/images/signup/4/girl-working-on-laptop.jpg"
@@ -15,7 +15,7 @@
                 </div>
 
                 <div class="flex items-center justify-center px-4 py-10 bg-white sm:px-6 lg:px-8 sm:py-16 lg:py-24">
-                    <div class="xl:w-full xl:max-w-sm 2xl:max-w-md xl:mx-auto">
+                    <div class="xl:w-full xl:max-w-sm w-full xl:mx-auto">
                         <h2 class="text-3xl font-bold leading-tight text-black sm:text-4xl">Sign in</h2>
                         <p class="mt-2 text-base text-gray-600">Don't have an account? <NuxtLink href="/signup" title=""
                                 class="font-medium text-blue-600 transition-all duration-200 hover:text-blue-700 focus:text-blue-700 hover:underline">Register</NuxtLink>
@@ -92,14 +92,14 @@
 
 
 
-                        <p class="mt-5 text-sm text-gray-600">
+                        <!-- <p class="mt-5 text-sm text-gray-600">
                             This site is protected by reCAPTCHA and the Google <a href="#" title=""
                                 class="text-blue-600 transition-all duration-200 hover:underline hover:text-blue-700">Privacy
                                 Policy</a> &
                             <a href="#" title=""
                                 class="text-blue-600 transition-all duration-200 hover:underline hover:text-blue-700">Terms
                                 of Service</a>
-                        </p>
+                        </p> -->
                     </div>
                 </div>
             </div>

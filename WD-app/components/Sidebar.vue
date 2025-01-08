@@ -1,11 +1,14 @@
 <template>
     <main>
-        <div class="hidden md:flex md:w-64 md:flex-col">
-            <div class="flex flex-col flex-grow pt-5 overflow-y-auto bg-white">
+        <div class="md:flex md:w-64 md:flex-col h-screen bg-white z-99 md:h-auto">
+            <div class="flex flex-col flex-grow pt-5 overflow-y-auto h-full z-99 bg-white">
                 <div class="flex items-center flex-shrink-0 px-4">
+                    <Icon icon="material-symbols:water-drop-outline-rounded" width="1.5em" height="1.5em"
+                        class="text-blue-600" />
+
                     <NuxtLink to="/admin" class="text-xl font-medium uppercase font-bold"> <span
                             class="text-blue-700">You</span>Guard
-                        </NuxtLink>
+                    </NuxtLink>
 
                 </div>
 
@@ -118,6 +121,7 @@
 </template>
 
 <script setup>
+import { Icon } from "@iconify/vue";
 
 
 const logout = () => {

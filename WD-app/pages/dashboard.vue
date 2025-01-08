@@ -4,7 +4,7 @@
             <div class="max-w-5xl mx-auto px-4">
                 <div class="flex justify-between h-16">
                     <div class="flex items-center">
-                        <Icon name="mdi:water" class="h-8 w-8 text-blue-500" />
+                        <Icon icon="material-symbols:water-drop-outline-rounded" width="1.5em" height="1.5em" class="text-blue-600" />
                         <span class="text-xl font-medium uppercase font-bold"> <span
                                 class="text-blue-700">You</span>Guard</span>
                     </div>
@@ -116,7 +116,7 @@
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import Notifications from './notifications.vue';
-
+import { Icon } from "@iconify/vue";
 
 definePageMeta({
     middleware: 'auth'
