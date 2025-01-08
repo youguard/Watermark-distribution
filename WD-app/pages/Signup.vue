@@ -11,62 +11,6 @@
                     </div>
                     <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
 
-                    <div class="relative">
-                        <div class="w-full max-w-xl xl:w-full xl:mx-auto xl:pr-24 xl:max-w-xl">
-                            <h3 class="text-4xl font-bold text-white">Join 35k+ web professionals & <br
-                                    class="hidden xl:block" />build your website</h3>
-                            <ul class="grid grid-cols-1 mt-10 sm:grid-cols-2 gap-x-8 gap-y-4">
-                                <li class="flex items-center space-x-3">
-                                    <div
-                                        class="inline-flex items-center justify-center flex-shrink-0 w-5 h-5 bg-blue-500 rounded-full">
-                                        <svg class="w-3.5 h-3.5 text-white" xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd"
-                                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                                clip-rule="evenodd"></path>
-                                        </svg>
-                                    </div>
-                                    <span class="text-lg font-medium text-white"> Commercial License </span>
-                                </li>
-                                <li class="flex items-center space-x-3">
-                                    <div
-                                        class="inline-flex items-center justify-center flex-shrink-0 w-5 h-5 bg-blue-500 rounded-full">
-                                        <svg class="w-3.5 h-3.5 text-white" xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd"
-                                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                                clip-rule="evenodd"></path>
-                                        </svg>
-                                    </div>
-                                    <span class="text-lg font-medium text-white"> Unlimited Exports </span>
-                                </li>
-                                <li class="flex items-center space-x-3">
-                                    <div
-                                        class="inline-flex items-center justify-center flex-shrink-0 w-5 h-5 bg-blue-500 rounded-full">
-                                        <svg class="w-3.5 h-3.5 text-white" xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd"
-                                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                                clip-rule="evenodd"></path>
-                                        </svg>
-                                    </div>
-                                    <span class="text-lg font-medium text-white"> 120+ Coded Blocks </span>
-                                </li>
-                                <li class="flex items-center space-x-3">
-                                    <div
-                                        class="inline-flex items-center justify-center flex-shrink-0 w-5 h-5 bg-blue-500 rounded-full">
-                                        <svg class="w-3.5 h-3.5 text-white" xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd"
-                                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                                clip-rule="evenodd"></path>
-                                        </svg>
-                                    </div>
-                                    <span class="text-lg font-medium text-white"> Design Files Included </span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="flex items-center justify-center px-4 py-10 bg-white sm:px-6 lg:px-8 sm:py-16 lg:py-24">
@@ -151,6 +95,22 @@
                                 </div>
 
                                 <div class="col-span-2">
+                                    <label for="region" class="text-base font-medium text-gray-900">
+                                        Select Region
+                                    </label>
+                                    <div class="mt-2.5 relative text-gray-400 focus-within:text-gray-600">
+                                       
+                                        <select id="region"
+                                            class="block w-full py-4 px-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600"
+                                            v-model="selectedRegion">
+                                            <option v-for="region in regions" :key="region._id" :value="region._id">
+                                                {{ region.region }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-span-2">
                                     <label for="" class="text-base font-medium text-gray-900"> Password </label>
                                     <div class="mt-2.5 relative text-gray-400 focus-within:text-gray-600">
                                         <div
@@ -228,7 +188,9 @@ export default {
             email: '',
             phonenumber: '',
             password: '',
-            isLoading: false
+            isLoading: false,
+            regions: [], // List of regions from the API
+            selectedRegion: null,
         }
     },
     methods: {
@@ -241,7 +203,8 @@ export default {
                     username: this.username,
                     email: this.email,
                     phoneNumber: this.phonenumber,
-                    password: this.password
+                    password: this.password,
+                    region: this.selectedRegion
 
                 })
 
@@ -255,8 +218,24 @@ export default {
                 console.error(error)
                 this.isLoading = false;
             }
-        }
-    }
+        },
+
+        async fetchRegions() {
+            try {
+                const response = await axios.get('https://watermark-distribution.onrender.com/api/regions'); // Replace with your API endpoint
+                const data = await response.data;
+                this.regions = data.regions || []; // Assuming API response has a `regions` array
+                console.log("Regions", data.regions);
+                
+            } catch (error) {
+                console.error('Error fetching regions:', error);
+            }
+        },
+    },
+
+    mounted() {
+        this.fetchRegions();
+    },
 }
 </script>
 

@@ -101,6 +101,8 @@ const sendMessage = async () => {
     const messageContent = newMessage.value;
     newMessage.value = ''; // Clear the input field immediately
 
+    console.log("Userdet", userDetails.value)
+
     try {
         // Retrieve the token from localStorage
         const accessToken = localStorage.getItem('accessToken');
@@ -111,7 +113,7 @@ const sendMessage = async () => {
 
         // Make the API request with the token in the headers
         await axios.post(
-            `https://watermark-distribution.onrender.com/api/messages/${userDetails}`,
+            `https://watermark-distribution.onrender.com/api/messages/${userDetails.value}`,
             { content: messageContent },
             {
                 headers: {
@@ -121,7 +123,7 @@ const sendMessage = async () => {
         );
 
         // Fetch the latest messages after sending
-        await fetchMessages();
+        await fetchMessages(userDetails.value);
     } catch (error) {
         console.error('Error sending message:', error);
     }

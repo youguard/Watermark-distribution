@@ -3,8 +3,9 @@
         <div class="hidden md:flex md:w-64 md:flex-col">
             <div class="flex flex-col flex-grow pt-5 overflow-y-auto bg-white">
                 <div class="flex items-center flex-shrink-0 px-4">
-                    <span class="text-xl font-medium uppercase font-bold"> <span
-                            class="text-blue-700">You</span>Guard</span>
+                    <NuxtLink to="/admin" class="text-xl font-medium uppercase font-bold"> <span
+                            class="text-blue-700">You</span>Guard
+                        </NuxtLink>
 
                 </div>
 
@@ -85,7 +86,7 @@
                     </div>
 
                     <div class="pb-4 md:mt-[250px]">
-                        <button type="button"
+                        <button type="button" @click="logout"
                             class="flex items-center gap-2 w-full px-4 py-3 text-sm font-medium text-gray-900 transition-all duration-200 rounded-lg hover:bg-gray-100">
                             <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 24 24">
                                 <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -116,10 +117,25 @@
     </main>
 </template>
 
-<script>
-export default {
+<script setup>
 
-}
+
+const logout = () => {
+    try {
+        // Remove the access token and any other stored user data from localStorage
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("userId");
+
+        // Optionally clear sessionStorage if used
+        sessionStorage.clear();
+
+        // Redirect the user to the login page or any desired route
+        navigateTo('/admin/signin')
+        console.log("User has been logged out successfully.");
+    } catch (error) {
+        console.error("An error occurred during logout:", error);
+    }
+};
 </script>
 
 <style></style>

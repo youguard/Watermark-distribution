@@ -73,16 +73,16 @@
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span
                                         :class="`px-2 py-1 text-xs font-medium rounded-full ${getStatusClass(user.status)}`">
-                                        {{ user.status ? 'Approved' : 'Pending' }}
+                                        {{ user.status === true ? 'Approved' : 'Pending' }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                     <div class="flex justify-end space-x-3">
-                                        <button @click="toggleApproval(user)" :class="`px-3 py-1 rounded-lg text-xs font-medium ${user.status === 'Approved'
+                                        <button @click="toggleApproval(user)" :class="`px-3 py-1 rounded-lg text-xs font-medium ${user.status === true
                                             ? 'bg-red-100 text-red-700 hover:bg-red-200'
                                             : 'bg-green-100 text-green-700 hover:bg-green-200'
                                             }`">
-                                            {{ user.status === 'Approved' ? 'Revoke' : 'Approve' }}
+                                            {{ user.status === true ? 'Revoke' : 'Approve' }}
                                         </button>
                                         <button @click="editUser(user)" class="text-blue-600 hover:text-blue-900">
                                             <Icon name="mdi:pencil" class="h-5 w-5" />
@@ -161,7 +161,7 @@ const fetchUsers = async () => {
             nickname: user.username || 'N/A',
             email: user.email || 'N/A',
             phone: user.phone || 'N/A', // Handle missing phone number
-            region: user.region || 'N/A',
+            region: regionsMap.value[user.region] || 'Unknown Region',
             status: user.isApproved , // Map 'Approved' to 'status'
         }));
     } catch (error) {
@@ -169,7 +169,31 @@ const fetchUsers = async () => {
     }
 };
 
+const regionsMap = ref({});
+
+const fetchRegions = async () => {
+    try {
+        const token = localStorage.getItem('accessToken');
+        const response = await axios.get('https://watermark-distribution.onrender.com/api/regions', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        // Transform regions into a map for easy lookup
+        regionsMap.value = response.data.regions.reduce((map, region) => {
+            map[region._id] = region.region; // Assuming `id` is the region ID and `name` is the region name
+            return map;
+        }, {});
+    } catch (error) {
+        console.error('Error fetching regions:', error);
+    }
+};
+
+
 onMounted(fetchUsers);
+onMounted(fetchRegions)
+
 
 // Filter and sort users
 const filteredUsers = computed(() => {
@@ -211,9 +235,9 @@ const totalPages = computed(() => {
 
 const getStatusClass = (status) => {
     switch (status) {
-        case 'Approved':
+        case true :
             return 'bg-green-100 text-green-700';
-        case 'Pending':
+        case false:
             return 'bg-yellow-100 text-yellow-700';
         default:
             return 'bg-gray-100 text-gray-700';
@@ -233,31 +257,25 @@ const toggleApproval = async (user) => {
     console.log(user);
     const id = user.id;
     const currentStatus = user.isApproved
-    
+    const token = localStorage.getItem('accessToken');
     try {
-        const token = localStorage.getItem('accessToken');
-
-        // Toggle approval status
+       // Toggle approval status
         const updatedStatus = !currentStatus;
+        console.log("Sattus", updatedStatus, token)
 
         const response = await axios.patch(
-            `https://watermark-distribution.onrender.com/api/users/${id}`,
-            { isApproved: updatedStatus }, // Update the `approved` field
+            `https://watermark-distribution.onrender.com/api/users/${id}/approve`,
+            {},
             {
                 headers: {
-                    Authorization: `Bearer ${token}`,
+                    Authorization: `Bearer ${token}`
                 },
             }
         );
 
-        // Update the `users` array with the updated user data
-        users.value = users.value.map((user) =>
-            user.id === id ? { ...user, isApproved: updatedStatus } : user
-        );
-
         console.log(response);
-        
         console.log(`User ${id} approval status changed to: ${updatedStatus}`);
+        await fetchUsers()
     } catch (error) {
         console.error('Error toggling user approval status:', error);
     }

@@ -28,18 +28,18 @@
                         />
                     </div>
 
-                    <div class="space-y-2">
+                    <div class="space-y-4 m-2">
                         <div
                             v-for="conversation in filteredConversations"
                             :key="conversation.id"
                             @click="selectUser(conversation.sender, conversation.name)"
-                            class="p-4 cursor-pointer hover:bg-gray-100"
+                            class=" cursor-pointer hover:bg-gray-100"
                             :class="{ 'bg-gray-100': selectedUser?._id === conversation.sender._id }"
                         >
-                            <div class="flex justify-between items-start border bg-gray-50 p-2 rounded">
+                            <div class="flex justify-between items-start border border-gray-100 bg-white p-2 rounded">
                                 <div class="flex items-center gap-2">
                                     <div
-                                        class="w-10 h-10 rounded-full flex items-center gap-2 justify-center text-white font-bold"
+                                        class="w-12 h-12 rounded-full flex items-center gap-2 justify-center text-white font-bold"
                                         :style="{ backgroundColor: getRandomColor(conversation.id) }"
                                     >
                                         {{ conversation.name.charAt(0).toUpperCase() }}
@@ -130,10 +130,17 @@
 </template>
 
 <script setup>
+
 import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
 
+
+// definePageMeta({
+//     middleware: 'auth',
+// });
+
 const selectedUser = ref(null);
+const selectedUserId = ref(null);
 const newMessage = ref('');
 const searchQuery = ref('');
 const conversations = ref([]);
@@ -230,6 +237,7 @@ const filteredConversations = computed(() => {
 // Select a conversation
 const selectUser = async (user, name) => {
     selectedUser.value = name;
+    selectedUserId.value = user._id
     showChatRoom.value = true; 
     console.log("One user:", user);
     try {
@@ -251,8 +259,9 @@ const sendMessage = async () => {
 
     try {
         const token = localStorage.getItem("accessToken");
+
         await axios.post(
-            `https://watermark-distribution.onrender.com/api/messages`,
+            `https://watermark-distribution.onrender.com/api/messages/${selectedUserId.value}`,
             { content: newMessage.value },
             { headers: { Authorization: `Bearer ${token}` } }
         );
