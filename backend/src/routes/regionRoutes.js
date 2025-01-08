@@ -113,3 +113,5 @@ const { protect, isAdmin } = require('../middlewares/authMiddleware')
 router.get('/regions', protect, getRegions)
 router.post('/regions/new', protect, isAdmin, newRegion)
 router.delete('/regions/:id', protect, isAdmin, deleteRegion)
+
+module.exports = router;

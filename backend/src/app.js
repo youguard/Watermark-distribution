@@ -6,6 +6,7 @@ const messageRoutes = require('./routes/messageRoutes')
 const notificationRoutes = require('./routes/notificationRoutes')
 const softwareRoutes = require('./routes/softwareRoutes')
 const userRoutes = require('./routes/userRoutes')
+const regionRoutes = require('./routes/regionRoutes')
 const bodyParser = require('body-parser')
 const connectDB = require('../src/config/db')
 const app = express();
@@ -33,6 +34,7 @@ app.use('/api', notificationRoutes)
 app.use('/api', adminAuthRoutes)
 app.use('/api', softwareRoutes)
 app.use('/api', userRoutes)
+app.use('/api', regionRoutes)
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
