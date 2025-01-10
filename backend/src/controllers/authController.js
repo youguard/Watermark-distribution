@@ -2,15 +2,16 @@ const jwt = require('jsonwebtoken')
 const User = require('../models/User')
 const bcrypt = require('bcrypt')
 const dotenv = require('dotenv').config()
+const emailjs = require('emailjs-com')
 const nodemailer = require('nodemailer')
 
-const transporter = nodemailer.createTransport({
-    service: 'gmail', 
-    auth: { 
-        user: process.env.EMAIL,
-        pass: process.env.EMAIL_PASSWORD
-    }
-});
+//const transporter = nodemailer.createTransport({
+//    service: 'gmail', 
+//    auth: { 
+//        user: process.env.EMAIL,
+//        pass: process.env.EMAIL_PASSWORD
+//    }
+//});
 
 const signup = async(req, res) => {
     try{
@@ -83,14 +84,14 @@ const signup = async(req, res) => {
 
     `
 
-    const mailOptions = {
-        from: process.env.EMAIL,
-        to: email,
-        subject: 'Verify Your Email',
-        html: verifyTemplate
-    };
-
-    await transporter.sendMail(mailOptions);
+    //const mailOptions = {
+    //    from: process.env.EMAIL,
+    //    to: email,
+    //    subject: 'Verify Your Email',
+    //    html: verifyTemplate
+    //};
+//
+    //await transporter.sendMail(mailOptions);
 
     const payload = {
         userId : savedUser._id
@@ -113,10 +114,30 @@ const signup = async(req, res) => {
 
     })
 
-    res.status(201).json({
-        success: true,
-        message: 'User created successfully. An OTP has been sent to your email for verification.',
-    }) 
+    const emailData = {
+        service_id: process.env.EMAILJS_SERVICE_ID,
+        template_id: process.env.EMAILJS_TEMPLATE_ID,
+        user_id: process.env.EMAILJS_PUBLIC_KEY,
+        template_params: {
+            to_email: email,
+            subject: 'Verify Email',
+            message_html: verifyTemplate 
+        }
+    };
+
+    const response = await emailjs.send(
+        emailData.service_id,
+        emailData.template_id,
+        emailData.template_params,
+        emailData.user_id
+    );
+
+    if (response.status === 200) {
+        res.status(200).json({ message: 'Verification email sent successfully' });
+    } else {
+        res.status(500).json({ message: 'Failed to send verification email' });
+    }
+
     } catch(err){
         res.status(500).json({
             success: false,
@@ -142,7 +163,7 @@ const verifyEmail = async (req, res) => {
 
         user.isVerified = true;
         user.otp = undefined;
-        user.otpExpire = undefined;
+        user.otpExpires = undefined;
         await user.save();
 
         const payload = {
@@ -306,13 +327,30 @@ const forgotPassword = async (req, res) => {
 </body>
         `
 
-        await sendEmail({
-            to: user.email,
-            subject: 'Password Reset Request',
-            html: resetTemplate
-        });
+       // await sendEmail({
+       // to: user.email,
+       //     subject: 'Password Reset Request',
+       //     html: resetTemplate
+       // });
 
+       const emailData = {
+        service_id: process.env.EMAILJS_SERVICE_ID,
+        template_id: process.env.EMAILJS_TEMPLATE_ID,
+        user_id: process.env.EMAILJS_PUBLIC_KEY,
+        template_params: {
+            to_email: user.email,
+            subject: 'Password Reset Request',
+            message_html: resetTemplate 
+        }
+    };
+
+    if (response.status === 200) {
         res.status(200).json({ message: 'Password reset email sent successfully' });
+    } else {
+        res.status(500).json({ message: 'Failed to send password reset email' });
+    }
+
+    res.status(200).json({ message: 'Password reset email sent successfully' });
     } catch (err) {
         console.error(err);
         res.status(500).json({
