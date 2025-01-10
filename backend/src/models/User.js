@@ -47,9 +47,17 @@ const userSchema = new Schema({
     isVerified : {
         type: Boolean,
         default: false
-    }
-})
+    },
+    resetPasswordToken: { type: String },
+    resetPasswordExpire: { type: Date },
 
+})
+userSchema.methods.getSignedJwtToken = function() {
+    return jwt.sign({ id: this._id }, process.env.SECRETKEY, {
+      expiresIn: process.env.JWT_EXPIRE || '1d'
+    });
+  };
+  
 const User = mongoose.model('User', userSchema)
 
 module.exports = User

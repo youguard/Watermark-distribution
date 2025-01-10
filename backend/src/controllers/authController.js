@@ -6,7 +6,8 @@ const nodemailer = require('nodemailer')
 
 const transporter = nodemailer.createTransport({
     service: 'gmail', 
-    auth: { // Your email
+    auth: { 
+        user: process.env.EMAIL,
         pass: process.env.EMAIL_PASSWORD
     }
 });
@@ -232,80 +233,141 @@ const login = async(req, res) => {
 }
 
 const forgotPassword = async (req, res) => {
-    try{
-        const { email } = req.body
-        const user = await User.findOne(email)
-        if(!user){
-            return res.status(400).json({ message: 'User Not Found...'}) 
+    try {
+        const { email } = req.body;
+
+        // Check if user exists
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).json({ message: 'User not found' });
         }
 
-         // Generate reset token
-    const resetToken = crypto.randomBytes(20).toString('hex');
-    console.log('Generated Reset Token:', resetToken); // Debug log
+        // Generate reset token
+        const resetToken = crypto.randomBytes(20).toString('hex');
 
-    // Hash token and set to resetPasswordToken field
-    user.resetPasswordToken = crypto
-      .createHash('sha256')
-      .update(resetToken)
-      .digest('hex');
-    console.log('Hashed Reset Token:', user.resetPasswordToken); // Debug log
+        // Hash token and save to user
+        user.resetPasswordToken = crypto
+            .createHash('sha256')
+            .update(resetToken)
+            .digest('hex');
+        user.resetPasswordExpire = Date.now() + 10 * 60 * 1000; // 10 minutes
 
-    // Set expire time to 10 minutes from now
-    user.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
+        await user.save({ validateBeforeSave: false });
 
-    await user.save({ validateBeforeSave: false });
+        // Create reset URL
+        const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
 
-    // Create reset URL
-    const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
-    console.log('Reset URL:', resetUrl);
+        // Send email with reset link
+        const resetTemplate = `
+        <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f4;">
+    <table role="presentation" cellpadding="0" cellspacing="0" style="width: 100%; max-width: 600px; margin: 0 auto; background-color: #ffffff;">
+        <tr>
+            <td style="padding: 40px 30px; text-align: center; background-color: #2563eb;">
+                <h1 style="color: #ffffff; margin: 0;">YouGuard</h1>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 40px 30px;">
+                <h2 style="color: #333333; margin-bottom: 20px;">Reset Your Password</h2>
+                <p style="color: #666666; font-size: 16px; line-height: 1.5; margin-bottom: 20px;">
+                    We received a request to reset the password for your account. If you didn't make this request, you can safely ignore this email.
+                </p>
+                <p style="color: #666666; font-size: 16px; line-height: 1.5; margin-bottom: 20px;">
+                    To reset your password, click the button below. This link will expire in 60 minutes.
+                </p>
+                <div style="text-align: center; margin: 30px 0;">
+                    <a href="${resetUrl}" style="display: inline-block; padding: 12px 30px; background-color: #2563eb; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold;">Reset Password</a>
+                </div>
+                <p style="color: #666666; font-size: 14px; line-height: 1.5;">
+                    If you're having trouble clicking the button, copy and paste this URL into your web browser:
+                    <br>
+                    <span style="color: #2563eb;">${resetUrl}</span>
+                </p>
+                <div style="margin-top: 30px; padding: 20px; background-color: #f8f8f8; border-radius: 5px;">
+                    <p style="color: #666666; font-size: 14px; line-height: 1.5; margin: 0;">
+                        For security reasons:
+                        <br>• This link will expire in 60 minutes
+                        <br>• Can only be used once
+                        <br>• If expired, please request a new password reset
+                    </p>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 20px 30px; background-color: #f8f8f8; text-align: center; font-size: 12px; color: #666666;">
+                <p style="margin: 0;">
+                    If you didn't request a password reset, please contact support immediately.
+                    <br>
+                    &copy; 2025 YouGuard. All rights reserved.
+                </p>
+            </td>
+        </tr>
+    </table>
+</body>
+        `
 
-    // email sending to come in later
-    }
-    catch(err){
+        await sendEmail({
+            to: user.email,
+            subject: 'Password Reset Request',
+            html: resetTemplate
+        });
+
+        res.status(200).json({ message: 'Password reset email sent successfully' });
+    } catch (err) {
+        console.error(err);
         res.status(500).json({
             success: false,
             message: 'Internal Server Error',
             error: err.message
-        })
+        });
     }
-}
+};
 
+// Reset Password
 const resetPassword = async (req, res) => {
     try {
-      // Get hashed token
-      const resetPasswordToken = crypto
-        .createHash('sha256')
-        .update(req.params.resettoken)
-        .digest('hex');
-  
-      const user = await User.findOne({
-        resetPasswordToken,
-        resetPasswordExpire: { $gt: Date.now() }
-      });
-  
-      if (!user) {
-        return res.status(400).json({ message: 'Invalid token' });
-      }
-  
-      //hash the new password
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(req.body.password, salt);
-  
-      // Set new password
-      user.password = hashedPassword;
-      user.resetPasswordToken = undefined;
-      user.resetPasswordExpire = undefined;
-      await user.save();
-  
-      // Create new token
-      const token = user.getSignedJwtToken();
-  
-      res.status(200).json({ message : "Password Changed Successfully",  success: true, token });
+        // Hash the token from the URL
+        const resetPasswordToken = crypto
+            .createHash('sha256')
+            .update(req.params.resettoken)
+            .digest('hex');
+
+        // Find user by token and check if it hasn't expired
+        const user = await User.findOne({
+            resetPasswordToken,
+            resetPasswordExpire: { $gt: Date.now() }
+        });
+
+        if (!user) {
+            return res.status(400).json({ message: 'Invalid or expired token' });
+        }
+
+        // Hash the new password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(req.body.password, salt);
+
+        // Update user's password and clear reset token fields
+        user.password = hashedPassword;
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpire = undefined;
+
+        await user.save();
+
+        const token = user.getSignedJwtToken();
+        const userRole = user.role
+
+        res.status(200).json({
+            message: 'Password changed successfully',
+            success: true,
+            token,
+            userRole
+        });
     } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: 'Server Error' });
+        console.error(err);
+        res.status(500).json({ message: 'Server Error', error: err.message });
     }
-  };
+};
+
 
 const changePassword = async (req, res) => {
     try{
