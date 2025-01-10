@@ -1,4 +1,4 @@
-const { signup, login, forgotPassword, resetPassword, changePassword} = require('../controllers/authController')
+const { signup, login, forgotPassword, resetPassword, changePassword, verifyEmail} = require('../controllers/authController')
 const {protect} = require('../middlewares/authMiddleware')
 const router = require('express').Router()
 
@@ -164,5 +164,5 @@ router.put('/user/reset-password', resetPassword)
  *         description: Internal server error
  */
 router.put('/user/change-password', changePassword)
-
+router.post('/user/verify-email', verifyEmail)
 module.exports = router

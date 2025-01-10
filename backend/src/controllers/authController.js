@@ -2,6 +2,14 @@ const jwt = require('jsonwebtoken')
 const User = require('../models/User')
 const bcrypt = require('bcrypt')
 const dotenv = require('dotenv').config()
+const nodemailer = require('nodemailer')
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail', 
+    auth: { // Your email
+        pass: process.env.EMAIL_PASSWORD
+    }
+});
 
 const signup = async(req, res) => {
     try{
@@ -13,16 +21,75 @@ const signup = async(req, res) => {
     const salt = await bcrypt.genSalt(10)
     const hashedPassword = await bcrypt.hash(password, salt)
 
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
     const newUser = new User({
         fullName,
         username,
         email,
         phoneNumber,
         password: hashedPassword,
-        region
+        region,
+        otp,
+        otpExpires: Date.now() + 10 * 60 * 1000
     })
-
     const savedUser = await newUser.save()
+
+    verifyTemplate = 
+    `
+    <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f4;">
+    <table role="presentation" cellpadding="0" cellspacing="0" style="width: 100%; max-width: 600px; margin: 0 auto; background-color: #ffffff;">
+        <tr>
+            <td style="padding: 40px 30px; text-align: center; background-color: #2563eb;">
+                <h1 style="color: #ffffff; margin: 0;">YouGuard</h1>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 40px 30px;">
+                <h2 style="color: #333333; margin-bottom: 20px;">Verify Your Email Address</h2>
+                <p style="color: #666666; font-size: 16px; line-height: 1.5; margin-bottom: 20px;">
+                    Thank you for creating an account with YouGuard. To complete your registration, please use the verification code below:
+                </p>
+                <div style="text-align: center; margin: 30px 0;">
+                    <div style="background-color: #f8f8f8; padding: 20px; border-radius: 5px; display: inline-block;">
+                        <span style="font-size: 32px; font-weight: bold; letter-spacing: 8px; color: #2563eb;">${otp}</span>
+                    </div>
+                </div>
+                <div style="margin: 30px 0; padding: 20px; background-color: #f8f8f8; border-radius: 5px;">
+                    <p style="color: #666666; font-size: 14px; line-height: 1.5; margin: 0;">
+                        Important:
+                        <br>• This code will expire in 10 minutes
+                        <br>• Do not share this code with anyone
+                        <br>• Enter this code on the verification page to complete your registration
+                    </p>
+                </div>
+                <p style="color: #666666; font-size: 14px; line-height: 1.5; margin-bottom: 20px;">
+                    If you did not create an account, no further action is required.
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 20px 30px; background-color: #f8f8f8; text-align: center; font-size: 12px; color: #666666;">
+                <p style="margin: 0;">
+                    This is an automated message, please do not reply to this email.
+                    <br>
+                    &copy; 2025 YouGuard. All rights reserved.
+                </p>
+            </td>
+        </tr>
+    </table>
+</body>
+
+    `
+
+    const mailOptions = {
+        from: process.env.EMAIL,
+        to: email,
+        subject: 'Verify Your Email',
+        html: verifyTemplate
+    };
+
+    await transporter.sendMail(mailOptions);
 
     const payload = {
         userId : savedUser._id
@@ -47,9 +114,7 @@ const signup = async(req, res) => {
 
     res.status(201).json({
         success: true,
-        message: 'User created successfully',
-        token,
-        userInfo
+        message: 'User created successfully. An OTP has been sent to your email for verification.',
     }) 
     } catch(err){
         res.status(500).json({
@@ -60,6 +125,61 @@ const signup = async(req, res) => {
         console.log(err)
     }  
 }
+
+const verifyEmail = async (req, res) => {
+    try {
+        const { email, otp } = req.body;
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(400).json({ message: 'User not found...' });
+        }
+
+        if (user.otp !== otp || user.otpExpires < Date.now()) {
+            return res.status(400).json({ message: 'Invalid or expired OTP.' });
+        }
+
+        user.isVerified = true;
+        user.otp = undefined;
+        user.otpExpire = undefined;
+        await user.save();
+
+        const payload = {
+            userId : savedUser._id
+        }
+        const secretKey = process.env.SECRETKEY
+        const options = {
+            expiresIn : '6hrs'
+        }
+    
+        const token = jwt.sign(payload, secretKey, options)
+    
+        const userInfo = ({
+            FullName: user.fullName,
+            Email: user.email,
+            Username: user.username,
+            PhoneNumber: user.phoneNumber,
+            Approved: user.isApproved,
+            Region: user.region,
+            Role: user.role
+    
+        })
+
+        res.status(200).json({
+            success: true,
+            message: 'Email verified successfully.',
+            token,
+            userInfo
+        });
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: 'Internal Server Error',
+            error: err.message
+        });
+        console.log(err);
+    }
+};
 
 const login = async(req, res) => {
     try{
@@ -221,5 +341,6 @@ module.exports = {
     login,
     forgotPassword,
     resetPassword,
-    changePassword
+    changePassword,
+    verifyEmail
 }
