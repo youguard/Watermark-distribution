@@ -9,7 +9,7 @@
                         <Icon icon="material-symbols:water-drop-outline-rounded" width="1.5em" height="1.5em"
                             class="text-blue-600" />
                         <span class="text-xl font-medium uppercase font-bold"> <span
-                                class="text-blue-700">You</span>Guard</span>
+                                class="text-blue-600">You</span>Guard</span>
                     </div>
                     <div class="flex items-center space-x-4">
                         <NuxtLink to="/signin"
