@@ -24,7 +24,7 @@
                                 class=" cursor-pointer hover:bg-gray-100"
                                 :class="{ 'bg-gray-100': selectedUser?._id === conversation.sender._id }">
                                 <div
-                                    class="flex justify-between items-start border border-gray-100 bg-white p-2 rounded">
+                                    class="flex justify-between items-start border border-gray-100 bg-white p-2 rounded mb-2">
                                     <div class="flex items-center gap-2">
                                         <div class="w-12 h-12 rounded-full flex items-center gap-2 justify-center text-white font-bold"
                                             :style="{ backgroundColor: getRandomColor(conversation.id) }">
@@ -49,7 +49,7 @@
                             </div>
                         </div>
 
-                        <div class="text-center h-[60vh] flex justify-center items-center">
+                        <div v-else class="text-center h-[60vh] flex justify-center items-center">
                             <p class="text-gray-500 text-md">No Messages Yet</p>
                         </div>
                     </div>
@@ -103,11 +103,6 @@
 
 import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
-
-
-// definePageMeta({
-//     middleware: 'auth',
-// });
 
 const selectedUser = ref(null);
 const selectedUserId = ref(null);
@@ -242,21 +237,21 @@ const sendMessage = async () => {
     }
 };
 
-const fetchUserMessages = async (id) => {
-    try {
-        const { data } = await axios.get(
-            `https://watermark-distribution.onrender.com/api/messages/${id}`,
-            {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`, // Use token for protected endpoint
-                },
-            }
-        );
-        messages.value = data.messages;
-    } catch (error) {
-        console.error("Error fetching messages:", error);
-    }
-}
+// const fetchUserMessages = async (id) => {
+//     try {
+//         const { data } = await axios.get(
+//             `https://watermark-distribution.onrender.com/api/messages/${id}`,
+//             {
+//                 headers: {
+//                     Authorization: `Bearer ${localStorage.getItem("accessToken")}`, // Use token for protected endpoint
+//                 },
+//             }
+//         );
+//         messages.value = data.messages;
+//     } catch (error) {
+//         console.error("Error fetching messages:", error);
+//     }
+// }
 
 
 const formatDate = (dateString) => {
@@ -290,6 +285,9 @@ const formatDate = (dateString) => {
 };
 
 
-// Fetch messages on component mount
-onMounted(fetchMessages);
+onMounted(() => {
+  if (process.client) {
+    fetchMessages(); // Fetch only on the client-side
+  }
+});
 </script>
