@@ -4,7 +4,8 @@
             <div class="max-w-5xl mx-auto px-4">
                 <div class="flex justify-between h-16">
                     <div class="flex items-center">
-                        <Icon icon="material-symbols:water-drop-outline-rounded" width="1.5em" height="1.5em" class="text-blue-600" />
+                        <Icon icon="material-symbols:water-drop-outline-rounded" width="1.5em" height="1.5em"
+                            class="text-blue-600" />
                         <span class="text-xl font-medium uppercase font-bold"> <span
                                 class="text-blue-700">You</span>Guard</span>
                     </div>
@@ -80,7 +81,8 @@
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                     <div class="flex items-center justify-between mb-6">
                         <h3 class="text-lg font-semibold text-gray-900">Software</h3>
-                        <span class="text-sm text-gray-500 capitalize"> {{ currentVersion }}</span>
+                        <span class="text-sm text-gray-500 capitalize"> {{ currentVersion.version
+                            }} </span>
                     </div>
 
                     <div v-if="userDetails.Approval === true" class="space-y-4">
@@ -94,8 +96,8 @@
 
 
                         <p v-if="needsUpdate" class="text-sm text-amber-600 flex items-center space-x-2">
-                            <Icon name="mdi:alert-circle" class="h-5 w-5" />
-                            <span>New version available. Please update your software.</span>
+                            <Icon  icon="mingcute:warning-line" class="h-5 w-5" />
+                            <span v-if="notifications">{{ notifications[0].content }}</span>
                         </p>
                     </div>
                     <div v-else class="bg-gray-50 rounded-lg p-4">
@@ -148,7 +150,12 @@ const fetchUserDetails = async () => {
     }
 }
 
-const currentVersion = ref('');
+let currentVersion = {
+    version: '',
+    releaseDate: new Date(),
+    downloads: 1254,
+}
+
 const needsUpdate = ref(true);
 
 
@@ -157,7 +164,8 @@ const softwares = ref([
 ]);
 
 const softwareId = ref('')
-
+const notifications = ref([]);
+const versionHistory = ref([])
 // Sort the software list by release date (descending order)
 softwares.value.sort((a, b) => new Date(b.releaseDate) - new Date(a.releaseDate));
 
@@ -182,12 +190,68 @@ const fetchAllSoftwares = async () => {
     }
 }
 
+const fetchVersions = async () => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+        return alert('Please login to view versions');
+    }
+    try {
+        const response = await axios.get(
+            'https://watermark-distribution.onrender.com/api/softwares',
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        const data = await response.data;
+        if (data.success) {
+            versionHistory.value.push(data.softwares);
+
+            // Assign the latest software to currentVersion
+            if (versionHistory.value.length > 0) {
+                const latestVersion = versionHistory.value[0]; // Assuming latest version is first in the list
+                currentVersion.value = {
+                    version: latestVersion.version,
+                    releaseDate: latestVersion.releaseDate || new Date(),
+                    downloads: latestVersion.downloads || 0,
+                };
+            } else {
+                // Reset currentVersion if no software is available
+                currentVersion.value = {
+                    version: '',
+                    releaseDate: null,
+                    downloads: 0,
+                };
+            }
+        } else {
+            alert(data.message || 'Failed to fetch software versions');
+        }
+    } catch (error) {
+        console.error('Error fetching versions:', error);
+    }
+};
+
+const fetchAllNotifications = async () => {
+    const token = localStorage.getItem('accessToken');
+    try {
+        const response = await axios.get('https://watermark-distribution.onrender.com/api/notifications', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        notifications.value = response.data.notifications;
+    } catch (error) {
+        console.error("Error fetching notifications:", error);
+    }
+};
+
 const downloadSoftware = async () => {
     console.log("SoftwareId:", softwareId.value);
-    
+
     const token = localStorage.getItem("accessToken");
     try {
-        const data  = await axios.get(
+        const data = await axios.get(
             `https://watermark-distribution.onrender.com/api/softwares/download/${softwareId.value}`,
             {
                 headers: {
@@ -200,8 +264,8 @@ const downloadSoftware = async () => {
         const downloadUrl = data.data.downloadUrl;
 
         console.log("Download url:", downloadUrl);
-        
-                // Create a link and trigger the download
+
+        // Create a link and trigger the download
         const link = document.createElement('a');
         link.href = downloadUrl;
         link.setAttribute('download', `software-${softwareId.value}.zip`);
@@ -235,4 +299,6 @@ const logout = () => {
 
 onMounted(fetchUserDetails)
 onMounted(fetchAllSoftwares)
+onMounted(fetchAllNotifications)
+onMounted(fetchVersions)
 </script>
