@@ -32,7 +32,7 @@
                                         </div>
                                         <div>
                                             <h3 class="font-semibold">{{ conversation.name }}</h3>
-                                            <p class="text-sm text-gray-600 truncate">
+                                            <p class="text-sm text-gray-600 w-48 truncate">
                                                 {{ conversation.messages[0].content }}
                                             </p>
                                         </div>
@@ -113,7 +113,18 @@ const messages = ref([]);
 
 const showChatRoom = ref(false);
 
-const isMobile = computed(() => window.innerWidth < 768);
+const isMobile = ref(false);
+
+onMounted(() => {
+  if (typeof window !== 'undefined') {
+    isMobile.value = window.innerWidth < 768;
+
+    // Optionally, add a resize listener for dynamic updates
+    window.addEventListener('resize', () => {
+      isMobile.value = window.innerWidth < 768;
+    });
+  }
+});
 
 
 const goBackToConversations = () => {
