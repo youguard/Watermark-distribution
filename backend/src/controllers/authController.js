@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt')
 const dotenv = require('dotenv').config()
 const emailjs = require('emailjs-com')
 const nodemailer = require('nodemailer')
+const crypto = require('crypto')
 
 require('dotenv').config();
 
@@ -312,28 +313,15 @@ const forgotPassword = async (req, res) => {
 </body>
         `
 
-       // await sendEmail({
-       // to: user.email,
-       //     subject: 'Password Reset Request',
-       //     html: resetTemplate
-       // });
+        const mailOptions = {
+            from: process.env.EMAIL,
+            to: user.email,
+            subject: 'Reset Your Password',
+            html: resetTemplate
+        };
+    //
+        await transporter.sendMail(mailOptions);
 
-       const emailData = {
-        service_id: process.env.EMAILJS_SERVICE_ID,
-        template_id: process.env.EMAILJS_TEMPLATE_ID,
-        user_id: process.env.EMAILJS_PUBLIC_KEY,
-        template_params: {
-            to_email: user.email,
-            subject: 'Password Reset Request',
-            message_html: resetTemplate 
-        }
-    };
-
-    if (response.status === 200) {
-        res.status(200).json({ message: 'Password reset email sent successfully' });
-    } else {
-        res.status(500).json({ message: 'Failed to send password reset email' });
-    }
 
     res.status(200).json({ message: 'Password reset email sent successfully' });
     } catch (err) {
