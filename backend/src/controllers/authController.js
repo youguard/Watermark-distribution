@@ -341,7 +341,7 @@ const resetPassword = async (req, res) => {
         // Hash the token from the URL
         const resetPasswordToken = crypto
             .createHash('sha256')
-            .update(req.params.resetToken)
+            .update(req.params.resettoken)
             .digest('hex');
 
         // Find user by token and check if it hasn't expired
