@@ -49,7 +49,7 @@ const getRegions = async (req, res) => {
 const deleteRegion = async (req, res) => {
     try{
         const regionId = req.params.id
-        const region = await Region.fingByIdAndDelete(regionId)
+        const region = await Region.findByIdAndDelete(regionId)
         if(!region){
             return res.status(400).json({ message: 'Region not found...'})
         }
