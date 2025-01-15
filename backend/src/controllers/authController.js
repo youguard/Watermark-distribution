@@ -340,6 +340,7 @@ const resetPassword = async (req, res) => {
     try {
         // Extract the token and password from the request body
         const { token, password } = req.body;
+        console.log(req.body)
 
         // Hash the token from the body
         const resetPasswordToken = crypto
