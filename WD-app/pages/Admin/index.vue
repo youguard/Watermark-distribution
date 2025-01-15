@@ -55,6 +55,7 @@
                             </div>
                             <div class="space-y-4" v-if="regions && regions.length > 0">
                                 <div v-for="region in regions" :key="region.name" class="flex items-center">
+                                    <Icon icon="mynaui:globe" width="1.2em" height="1.2em" class="text-gray-500" />
                                     <span class="w-24 text-sm text-gray-500">{{ region.name }}</span>
                                     <div class="flex-1 mx-2">
                                         <div class="h-2 bg-blue-100 rounded-full">
@@ -78,16 +79,42 @@
                     <div class="bg-white rounded-lg shadow">
                         <div class="p-6">
                             <div class="flex items-center justify-between">
-                                <h2 class="text-lg font-medium mb-4">All Regions</h2>
+                                <h2 class="text-lg font-medium mb-4">All Regions ({{ allRegions.length }})</h2>
                                 <button @click="openCreateRegionModal"
                                     class="px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg shadow hover:bg-blue-600">
                                     Create Region
                                 </button>
                             </div>
-                            <div class="space-y-4">
-                                <div v-for="region in allRegions" :key="region.region" class="">
-                                    <span class="w-24 text-sm text-gray-500">{{ region.region }}</span>
+                            <div class="space-y-4 mt-4 overflow-auto h-[30vh]">
+                                <div v-for="region in allRegions" :key="region.region" class=" flex justify-between items-center mt-2 gap-1">
+                                    <div class="flex flex-shrink-0 items-center gap-1">
+                                        <Icon icon="mynaui:globe" width="1.2em" height="1.2em" class="text-gray-500" />
+                                        <span class="w-24 text-sm flex-shrink-0 whitespace-nowrap text-gray-500">{{ region.region }}</span>
+                                    </div>
+                                    <button @click="confirmDeleteRegion(region._id)"
+                                        class="text-red-500 hover:text-red-700">
+                                        <Icon icon="weui:delete-outlined" width="1.2em" height="1.2em" />
+                                    </button>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Delete Confirmation Modal -->
+                    <div v-if="showDeleteModal"
+                        class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                        <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+                            <h3 class="text-lg font-medium mb-4">Confirm Delete</h3>
+                            <p class="mb-4">Are you sure you want to delete this region?</p>
+                            <div class="flex items-center justify-end space-x-2">
+                                <button @click="closeDeleteRegionModal" type="button"
+                                    class="px-4 py-2 bg-gray-300 text-gray-700 text-sm font-medium rounded-lg shadow hover:bg-gray-400">
+                                    Cancel
+                                </button>
+                                <button @click="deleteRegion" type="button"
+                                    class="px-4 py-2 bg-red-500 text-white text-sm font-medium rounded-lg shadow hover:bg-red-600">
+                                    {{ !isDeleting ? 'Delete' : 'Deleting...' }}
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -133,6 +160,7 @@
 import { Icon } from '@iconify/vue/dist/iconify.js';
 import axios from 'axios';
 import { ref, computed, onMounted } from 'vue';
+import { toast } from 'vue3-toastify';
 
 
 definePageMeta({
@@ -140,6 +168,7 @@ definePageMeta({
 });
 
 const isLoading = ref(false)
+const isDeleting = ref(false)
 // Reactive stats
 const stats = ref([
     { title: 'Total Users', value: '0', change: 'N/A', status: '', icon: 'lucide:users', iconStyle: 'bg-blue-200 text-blue-600' },
@@ -194,12 +223,13 @@ const createRegion = async () => {
         )
         isLoading.value = false
         console.log("REgion created", response.data)
-        alert("Region Created")
+        toast.success("Region Created")
         closeCreateRegionModal()
-
+            fetchAllRegions()
     }
 
     catch (err) {
+        toast.error(err.message)
         console.error("Error creating region", err)
         isLoading.value = false
     }
@@ -241,11 +271,11 @@ const saveAnnouncement = async () => {
                 },
             }
         );
-        alert('Announcement updated successfully!');
+        toast.success('Announcement updated successfully!');
         console.log(response.data);
     } catch (error) {
         console.error('Error saving announcement:', error);
-        alert('Failed to update announcement.');
+        toast.error('Failed to update announcement.');
     }
 };
 
@@ -333,6 +363,49 @@ const fetchUsers = async () => {
         console.error('Error fetching users:', error);
     }
 };
+
+
+
+
+
+const showDeleteModal = ref(false);
+const regionToDelete = ref(null);
+
+const openDeleteRegionModal = (regionId) => {
+    regionToDelete.value = regionId;
+    showDeleteModal.value = true;
+};
+
+const closeDeleteRegionModal = () => {
+    showDeleteModal.value = false;
+    regionToDelete.value = null;
+};
+
+const deleteRegion = async () => {
+    isDeleting.value = true
+    const token = localStorage.getItem('accessToken');
+    try {
+        await axios.delete(`https://watermark-distribution.onrender.com/api/regions/${regionToDelete.value}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        isDeleting.value = false
+        toast.success('Region deleted successfully!');
+        closeDeleteRegionModal();
+        fetchAllRegions(); 
+
+    } catch (error) {
+        console.error('Error deleting region:', error);
+        toast.error('Failed to delete region.');
+        isDeleting.value = false
+    }
+};
+
+const confirmDeleteRegion = (regionId) => {
+    openDeleteRegionModal(regionId);
+};
+
 
 // Fetch data on component mount
 onMounted(fetchUsers);
