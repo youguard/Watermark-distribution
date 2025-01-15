@@ -103,6 +103,13 @@
                                         </span>
                                         <span v-else> Sign in</span>
                                     </button>
+
+                                    <p class="mt-2 text-base text-gray-600">
+                                        <NuxtLink href="/forgot-password" title=""
+                                            class="font-medium text-blue-600 transition-all duration-200 hover:text-blue-700 focus:text-blue-700 hover:underline">
+                                            Forgot password?
+                                        </NuxtLink>
+                                    </p>
                                 </div>
                             </div>
                         </form>

@@ -170,8 +170,12 @@ const fetchMessages = async () => {
 
         // Group messages by sender
         const groupedMessages = userMessages.reduce((acc, msg) => {
+            if (!msg.sender || !msg.sender._id) {
+                console.warn("Skipping message with undefined sender:", msg);
+                return acc;
+            }
             const senderId = msg.sender._id;
-            console.log("SenderId:", senderId);
+            console.log("SenderId Test:", senderId);
 
             if (!acc[senderId]) {
                 acc[senderId] = { messages: [], sender: msg.sender };
