@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const { deflateSync } = require('zlib')
 const Schema = mongoose.Schema
 const Region = require('./Region')
+const jwt = require('jsonwebtoken')
 
 const userSchema = new Schema({
     fullName: {

@@ -208,7 +208,7 @@ const login = async(req, res) => {
         }
         const matchedPassword = await bcrypt.compare(password, user.password)
         if(!matchedPassword){
-            res.status(400).json({ message: 'Incorrect Credentials.. Please try again.'})
+            return res.status(400).json({ message: 'Incorrect Credentials.. Please try again.'})
         }
 
         const payload = {
@@ -338,10 +338,13 @@ const forgotPassword = async (req, res) => {
 // Reset Password
 const resetPassword = async (req, res) => {
     try {
-        // Hash the token from the URL
+        // Extract the token and password from the request body
+        const { token, password } = req.body;
+
+        // Hash the token from the body
         const resetPasswordToken = crypto
             .createHash('sha256')
-            .update(req.params.resettoken)
+            .update(token)
             .digest('hex');
 
         // Find user by token and check if it hasn't expired
@@ -356,7 +359,7 @@ const resetPassword = async (req, res) => {
 
         // Hash the new password
         const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(req.body.password, salt);
+        const hashedPassword = await bcrypt.hash(password, salt);
 
         // Update user's password and clear reset token fields
         user.password = hashedPassword;
@@ -365,8 +368,9 @@ const resetPassword = async (req, res) => {
 
         await user.save();
 
-        const token = user.getSignedJwtToken();
-        const userRole = user.role
+        // Generate a new JWT token and return user details
+        const Token = user.getSignedJwtToken();
+        const userRole = user.role;
 
         res.status(200).json({
             message: 'Password changed successfully',
@@ -379,6 +383,7 @@ const resetPassword = async (req, res) => {
         res.status(500).json({ message: 'Server Error', error: err.message });
     }
 };
+
 
 
 const changePassword = async (req, res) => {

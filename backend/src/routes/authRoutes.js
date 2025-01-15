@@ -131,7 +131,7 @@ router.post('/user/forgot-password', protect, forgotPassword)
  *       500:
  *         description: Internal server error
  */
-router.put('/user/reset-password/:resettoken', resetPassword)
+router.put('/user/reset-password/', resetPassword)
 
 /**
  * @swagger
