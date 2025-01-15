@@ -116,7 +116,7 @@ const submitPasswordReset = async () => {
 
     loading.value = true;
     try {
-        await axios.post("https://watermark-distribution.onrender.com/api/user/reset-password", {
+        await axios.put("https://watermark-distribution.onrender.com/api/user/reset-password", {
             token,
             newPassword: newPassword.value,
         });

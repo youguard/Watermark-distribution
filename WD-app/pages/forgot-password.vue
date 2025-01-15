@@ -48,7 +48,7 @@ export default {
         async submitEmail() {
             this.loading = true;
             try {
-                const response = await axios.post("https://watermark-distribution.onrender.com/api/users/verify-email", {
+                const response = await axios.post("https://watermark-distribution.onrender.com/api/users/forgot-password", {
                     email: this.email
                 });
                 toast.success('Link sent to email')
