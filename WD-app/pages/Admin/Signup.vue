@@ -135,6 +135,7 @@
 
 <script>
 import axios from 'axios';
+import { toast } from 'vue3-toastify';
 
 export default {
     data() {
@@ -156,12 +157,12 @@ export default {
                 })
 
                 const data = await response.data
-                alert(data.message);
+                toast.success(data.message);
                 this.$router.push('/admin/signin')
                 console.log(data)
                 this.isLoading = false;
             } catch (error) {
-                alert('An error occurred. Please try again later.')
+                toast.error('An error occurred. Please try again later.')
                 console.error(error)
                 this.isLoading = false;
             }

@@ -74,7 +74,7 @@
                 <div class="relative">
                     <!-- Container with Background Image -->
                     <div
-                        class="hero aspect-square rounded-2xl shadow-lg flex items-center justify-center bg-[url('@/assets/img/hero.png')] bg-cover bg-center">
+                        class="hero aspect-square rounded-2xl shadow-lg bg-white flex items-center justify-center bg-[url('@/assets/img/hero.png')] bg-cover bg-center">
                         <Icon name="mdi:cellphone" class="h-32 w-32 text-blue-500" />
                     </div>
 

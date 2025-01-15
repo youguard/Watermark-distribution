@@ -9,6 +9,14 @@
                             src="https://cdn.rareblocks.xyz/collection/celebration/images/signup/4/girl-working-on-laptop.jpg"
                             alt="" />
                     </div>
+                    <div class="z-20">
+                        <div class="flex z-20 items-center">
+                            <Icon icon="material-symbols:water-drop-outline-rounded" width="4em" height="4em"
+                                class="text-blue-600" />
+                            <span class="text-6xl font-medium uppercase text-white font-bold"> <span
+                                    class="text-blue-700">You</span>Guard</span>
+                        </div>
+                    </div>
                     <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
 
                 </div>
@@ -17,7 +25,8 @@
                     <div class="xl:w-full xl:max-w-sm w-full xl:mx-auto">
                         <h2 class="text-3xl font-bold leading-tight text-black sm:text-4xl">Sign up</h2>
                         <p class="mt-2 text-base text-gray-600">Already have an account? <NuxtLink to="/signin" title=""
-                                class="font-medium text-blue-600 transition-all duration-200 hover:text-blue-700 focus:text-blue-700 hover:underline">Login</NuxtLink>
+                                class="font-medium text-blue-600 transition-all duration-200 hover:text-blue-700 focus:text-blue-700 hover:underline">
+                                Login</NuxtLink>
                         </p>
 
                         <form action="#" method="POST" class="mt-8">
@@ -40,7 +49,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-span-2 md:col">
+                                <div class="col-span-2">
                                     <label for="" class="text-base font-medium text-gray-900"> Username </label>
                                     <div class="mt-2.5 relative text-gray-400 focus-within:text-gray-600">
                                         <div
@@ -58,7 +67,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-span-2 md:col">
+                                <div class="col-span-2">
                                     <label for="" class="text-base font-medium text-gray-900"> Email address </label>
                                     <div class="mt-2.5 relative text-gray-400 focus-within:text-gray-600">
                                         <div
@@ -76,7 +85,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-span-2">
+                                <!-- <div class="col-span-2">
                                     <label for="" class="text-base font-medium text-gray-900"> Phone number </label>
                                     <div class="mt-2.5 relative text-gray-400 focus-within:text-gray-600">
                                         <div
@@ -92,14 +101,14 @@
                                             class="block w-full py-4 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600"
                                             v-model="phonenumber" />
                                     </div>
-                                </div>
+                                </div> -->
 
                                 <div class="col-span-2">
                                     <label for="region" class="text-base font-medium text-gray-900">
                                         Select Region
                                     </label>
                                     <div class="mt-2.5 relative text-gray-400 focus-within:text-gray-600">
-                                       
+
                                         <select id="region"
                                             class="block w-full py-4 px-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600"
                                             v-model="selectedRegion">
@@ -130,7 +139,7 @@
 
                                 <div class="w-full">
                                     <button type="button"
-                                        class="md:inline-flex items-center justify-center w-full px-4 py-4 text-base font-semibold text-white transition-all duration-200 border border-transparent rounded-md bg-gradient-to-r from-fuchsia-600 to-blue-600 focus:outline-none hover:opacity-80 focus:opacity-80"
+                                        class="md:inline-flex items-center justify-center w-full px-4 py-4 text-base font-semibold text-white transition-all duration-200 border border-transparent rounded-md bg-blue-600 focus:outline-none hover:opacity-80 focus:opacity-80"
                                         @click="signup">
                                         <span v-if="isLoading" class="mr-2">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em"
@@ -157,17 +166,6 @@
                                 </div>
                             </div>
                         </form>
-
-
-<!-- 
-                        <p class="mt-5 text-sm text-gray-600">
-                            This site is protected by reCAPTCHA and the Google <a href="#" title=""
-                                class="text-blue-600 transition-all duration-200 hover:underline hover:text-blue-700">Privacy
-                                Policy</a> &
-                            <a href="#" title=""
-                                class="text-blue-600 transition-all duration-200 hover:underline hover:text-blue-700">Terms
-                                of Service</a>
-                        </p> -->
                     </div>
                 </div>
             </div>
@@ -177,10 +175,16 @@
 </template>
 
 <script>
+import { Icon } from '@iconify/vue/dist/iconify.js';
 import axios from 'axios';
+import { toast } from 'vue3-toastify';
 
 
 export default {
+    components: {
+        Icon
+    },
+
     data() {
         return {
             fullname: '',
@@ -198,23 +202,21 @@ export default {
             try {
                 this.isLoading = true;
                 const response = await axios.post('https://watermark-distribution.onrender.com/api/user/signup', {
-
                     fullName: this.fullname,
                     username: this.username,
                     email: this.email,
-                    phoneNumber: this.phonenumber,
                     password: this.password,
                     region: this.selectedRegion
-
                 })
 
                 const data = await response.data
-                alert(data.message);
-                navigateTo('/signin')
+                localStorage.setItem("Email-onSignup", data.email)
+                toast.success("Account created");
+                navigateTo('/verify-email')
                 console.log(data)
                 this.isLoading = false;
             } catch (error) {
-                alert('An error occurred. Please try again later.')
+                toast.error('An error occurred. Please try again later.')
                 console.error(error)
                 this.isLoading = false;
             }
@@ -226,7 +228,7 @@ export default {
                 const data = await response.data;
                 this.regions = data.regions || []; // Assuming API response has a `regions` array
                 console.log("Regions", data.regions);
-                
+
             } catch (error) {
                 console.error('Error fetching regions:', error);
             }

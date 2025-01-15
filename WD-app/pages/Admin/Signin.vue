@@ -117,6 +117,8 @@
 
 <script>
 import axios from 'axios';
+import { toast } from 'vue3-toastify';
+
 export default {
     data() {
         return {
@@ -138,11 +140,11 @@ export default {
                 localStorage.setItem("role", response.data.role);
                 console.log(response.data)
                 this.$router.push("/admin")
-                alert("Login successful")
+                toast.success("Login successful")
 
                 this.isLoading = false
             } catch (error) {
-                alert("Login failed")
+                toast.error("Login failed")
                 console.error(error)
                 this.isLoading = false
             }

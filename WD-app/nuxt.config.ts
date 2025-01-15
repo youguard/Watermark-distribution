@@ -12,5 +12,5 @@ export default defineNuxtConfig({
     middleware: ['auth'],
   },
 
-  css: ['~/assets/css/main.css'],
+  css: ['~/assets/css/main.css', 'vue3-toastify/dist/index.css'],
 })

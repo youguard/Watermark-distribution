@@ -2,6 +2,8 @@
     <div>
         <section class="bg-white">
             <div class="grid grid-cols-1 lg:grid-cols-2">
+
+
                 <div
                     class="relative hidden md:flex items-end px-4 pb-10 pt-60 sm:pb-16 md:justify-center lg:pb-24 bg-gray-50 sm:px-6 lg:px-8">
                     <div class="absolute inset-0">
@@ -9,16 +11,31 @@
                             src="https://cdn.rareblocks.xyz/collection/celebration/images/signup/4/girl-working-on-laptop.jpg"
                             alt="" />
                     </div>
+                    <div class="z-20">
+                        <div class="flex z-20 items-center">
+                            <Icon icon="material-symbols:water-drop-outline-rounded" width="4em" height="4em"
+                                class="text-blue-600" />
+                            <span class="text-6xl font-medium uppercase text-white font-bold"> <span
+                                    class="text-blue-700">You</span>Guard</span>
+                        </div>
+                    </div>
                     <div class="absolute h-screen inset-0 bg-gradient-to-t from-black to-transparent"></div>
-
-
                 </div>
+
+
+
+
+
+
+
+
 
                 <div class="flex items-center justify-center px-4 py-10 bg-white sm:px-6 lg:px-8 sm:py-16 lg:py-24">
                     <div class="xl:w-full xl:max-w-sm w-full xl:mx-auto">
                         <h2 class="text-3xl font-bold leading-tight text-black sm:text-4xl">Sign in</h2>
                         <p class="mt-2 text-base text-gray-600">Don't have an account? <NuxtLink href="/signup" title=""
-                                class="font-medium text-blue-600 transition-all duration-200 hover:text-blue-700 focus:text-blue-700 hover:underline">Register</NuxtLink>
+                                class="font-medium text-blue-600 transition-all duration-200 hover:text-blue-700 focus:text-blue-700 hover:underline">
+                                Register</NuxtLink>
                         </p>
 
                         <form action="#" method="POST" class="mt-8">
@@ -62,7 +79,7 @@
 
                                 <div>
                                     <button type="button"
-                                        class="inline-flex items-center justify-center w-full px-4 py-4 text-base font-semibold text-white transition-all duration-200 border border-transparent rounded-md bg-gradient-to-r from-fuchsia-600 to-blue-600 focus:outline-none hover:opacity-80 focus:opacity-80"
+                                        class="inline-flex items-center justify-center w-full px-4 py-4 text-base font-semibold text-white transition-all duration-200 border border-transparent rounded-md bg-blue-600 focus:outline-none hover:opacity-80 focus:opacity-80"
                                         @click="login">
                                         <span v-if="isLoading" class="mr-2">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em"
@@ -110,7 +127,13 @@
 
 <script>
 import axios from 'axios';
+import { toast } from 'vue3-toastify';
+import { Icon } from "@iconify/vue";
+
 export default {
+    components: {
+        Icon
+    },
     data() {
         return {
             email: '',
@@ -132,7 +155,7 @@ export default {
                 localStorage.setItem("role", response.data.userRole);
 
                 navigateTo("/dashboard");
-                alert("Login successful")
+                toast.success("Login successful")
                 console.log(response.data)
                 this.isLoading = false;
             } catch (error) {

@@ -5,7 +5,8 @@
             <div class="p-4 border-b flex items-center justify-between">
                 <h1 class="text-2xl font-bold">Messages</h1>
                 <button v-if="showChatRoom && isMobile" @click="goBackToConversations" class="text-blue-500 underline">
-                    Back
+                    <Icon icon="mingcute:left-fill" width="1.5em" height="1.5em" class="text-gray-800" />
+                    back
                 </button>
             </div>
 
@@ -103,6 +104,7 @@
 
 import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
+import { Icon } from '@iconify/vue/dist/iconify.js';
 
 const selectedUser = ref(null);
 const selectedUserId = ref(null);
@@ -113,17 +115,21 @@ const messages = ref([]);
 
 const showChatRoom = ref(false);
 
-const isMobile = ref(false);
+const isMobile = computed(() => {
+    if (typeof window !== 'undefined') {
+        return window.innerWidth < 768;
+    }
+    return true; // Default to `true` for server-side rendering or undefined window
+});
 
 onMounted(() => {
-  if (typeof window !== 'undefined') {
-    isMobile.value = window.innerWidth < 768;
-
-    // Optionally, add a resize listener for dynamic updates
-    window.addEventListener('resize', () => {
-      isMobile.value = window.innerWidth < 768;
-    });
-  }
+    if (typeof window !== 'undefined') {
+        // Update `isMobile` dynamically on resize
+        window.addEventListener('resize', () => {
+            // Since `computed` can't be directly updated, this works dynamically with its getter
+            isMobile.value = window.innerWidth < 768;
+        });
+    }
 });
 
 
@@ -248,23 +254,6 @@ const sendMessage = async () => {
     }
 };
 
-// const fetchUserMessages = async (id) => {
-//     try {
-//         const { data } = await axios.get(
-//             `https://watermark-distribution.onrender.com/api/messages/${id}`,
-//             {
-//                 headers: {
-//                     Authorization: `Bearer ${localStorage.getItem("accessToken")}`, // Use token for protected endpoint
-//                 },
-//             }
-//         );
-//         messages.value = data.messages;
-//     } catch (error) {
-//         console.error("Error fetching messages:", error);
-//     }
-// }
-
-
 const formatDate = (dateString) => {
     if (!dateString) return "Invalid date";
 
@@ -297,8 +286,8 @@ const formatDate = (dateString) => {
 
 
 onMounted(() => {
-  if (process.client) {
-    fetchMessages(); // Fetch only on the client-side
-  }
+    if (process.client) {
+        fetchMessages(); // Fetch only on the client-side
+    }
 });
 </script>
