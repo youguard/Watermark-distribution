@@ -338,14 +338,10 @@ const forgotPassword = async (req, res) => {
 // Reset Password
 const resetPassword = async (req, res) => {
     try {
-        // Extract the token and password from the request body
-        const { token, password } = req.body;
-        console.log(req.body)
-
-        // Hash the token from the body
+        // Hash the token from the URL
         const resetPasswordToken = crypto
             .createHash('sha256')
-            .update(token)
+            .update(req.params.resettoken)
             .digest('hex');
 
         // Find user by token and check if it hasn't expired
@@ -360,7 +356,7 @@ const resetPassword = async (req, res) => {
 
         // Hash the new password
         const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
+        const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
         // Update user's password and clear reset token fields
         user.password = hashedPassword;
@@ -369,9 +365,8 @@ const resetPassword = async (req, res) => {
 
         await user.save();
 
-        // Generate a new JWT token and return user details
-        const Token = user.getSignedJwtToken();
-        const userRole = user.role;
+        const token = user.getSignedJwtToken();
+        const userRole = user.role
 
         res.status(200).json({
             message: 'Password changed successfully',
@@ -384,7 +379,6 @@ const resetPassword = async (req, res) => {
         res.status(500).json({ message: 'Server Error', error: err.message });
     }
 };
-
 
 
 const changePassword = async (req, res) => {
