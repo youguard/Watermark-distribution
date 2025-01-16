@@ -212,7 +212,7 @@ export default {
                 const data = await response.data
                 localStorage.setItem("Email-onSignup", data.email)
                 toast.success("Account created");
-                navigateTo('/verify-email')
+                navigateTo('/signin')
                 console.log(data)
                 this.isLoading = false;
             } catch (error) {

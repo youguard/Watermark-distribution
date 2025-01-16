@@ -28,36 +28,85 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import { Icon } from '@iconify/vue/dist/iconify.js';
 import axios from 'axios';
+import { ref, computed } from 'vue';
 import { toast } from 'vue3-toastify';
 
-export default {
-    components: {
-        Icon
-    },
-    data() {
-        return {
-            email: "",
-            message: "",
-            loading: false
-        };
-    },
-    methods: {
-        async submitEmail() {
-            this.loading = true;
-            try {
-                const response = await axios.post("https://watermark-distribution.onrender.com/api/users/forgot-password", {
-                    email: this.email
-                });
-                toast.success('Link sent to email')
-            } catch (error) {
-                toast.error('Something went wrong')
-            } finally {
-                this.loading = false;
+const email = ref('');
+const loading = ref(false);
+const error = ref('');
+const debugInfo = ref(null);
+
+const isValidEmail = computed(() => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value);
+});
+
+const submitEmail = async () => {
+    if (!isValidEmail.value) {
+        error.value = 'Please enter a valid email address';
+        return;
+    }
+
+    loading.value = true;
+    error.value = '';
+    debugInfo.value = null;
+
+    try {
+        const response = await axios.post(
+            "https://watermark-distribution.onrender.com/api/user/forgot-password",
+            { email: email.value },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    // Add any required headers here
+                },
+                // Enable debug information
+                validateStatus: null,
             }
-        },
-    },
+        );
+
+        // Log full response for debugging
+        debugInfo.value = {
+            status: response.status,
+            data: response.data,
+            headers: response.headers
+        };
+
+        if (response.status === 200 || response.status === 201) {
+            toast.success(`Reset link sent to ${email.value}`);
+            email.value = ''; // Clear the email field
+        } else {
+            throw new Error(response.data?.message || 'Failed to send reset link');
+        }
+
+    } catch (err) {
+        console.error('Error details:', err);
+
+        // More specific error handling
+        if (err.response) {
+            // Server responded with error
+            error.value = err.response.data?.message || 'Server error occurred';
+            debugInfo.value = {
+                status: err.response.status,
+                data: err.response.data,
+                headers: err.response.headers
+            };
+        } else if (err.request) {
+            // Request made but no response
+            error.value = 'No response from server. Please try again.';
+            debugInfo.value = { request: 'No response received' };
+        } else {
+            // Request setup error
+            error.value = 'Failed to send request. Please try again.';
+            debugInfo.value = { message: err.message };
+        }
+
+        toast.error(error.value);
+    } finally {
+        loading.value = false;
+    }
 };
+
 </script>

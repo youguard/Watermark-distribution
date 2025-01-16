@@ -88,12 +88,12 @@
                                             </div>
                                         </button>
 
-                                        <button @click="editUser(user)" class="text-blue-600 hover:text-blue-900">
+                                        <!-- <button @click="editUser(user)" class="text-blue-600 hover:text-blue-900">
                                             <Icon icon="mdi:pencil" class="h-5 w-5" />
                                         </button>
                                         <button @click="messageUser(user)" class="text-gray-600 hover:text-gray-900">
                                             <Icon icon="mingcute:message-4-line" width="1.5em" height="1.5em" />
-                                        </button>
+                                        </button> -->
                                         <button @click="openDeleteModal(user)" class="text-red-600 hover:text-red-900">
                                             <Icon icon="mdi:trash-can-outline" class="h-5 w-5" />
                                         </button>

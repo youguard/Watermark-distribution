@@ -113,11 +113,11 @@ const checkPasswordsMatch = () => {
 
 const submitPasswordReset = async () => {
     if (!isFormValid.value) return;
-
     loading.value = true;
+    const token = route.params.token;
     try {
-        await axios.put("https://watermark-distribution.onrender.com/api/user/reset-password", {
-            newPassword: newPassword.value,
+        await axios.put(`https://watermark-distribution.onrender.com/api/user/reset-password/${token}`, {
+            password: newPassword.value,
         });
         message.value = "Password reset successfully!";
         error.value = false;
