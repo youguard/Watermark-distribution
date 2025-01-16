@@ -396,7 +396,7 @@ const changePassword = async (req, res) => {
         }
 
         const salt = await bcrypt.genSalt(10)
-        const hashedPassword = await bcrypt.hash(password, salt)
+        const hashedPassword = await bcrypt.hash(newPassword, salt)
 
         user.password = hashedPassword
         await user.save()
