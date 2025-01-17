@@ -400,6 +400,11 @@ const changePassword = async (req, res) => {
 
         user.password = hashedPassword
         await user.save()
+
+        res.status(200).json({
+            success: true,
+            message:'User password changed successfully'
+        })
     }
     catch(err){
         res.status(500).json({
