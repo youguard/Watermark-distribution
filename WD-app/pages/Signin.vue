@@ -166,7 +166,7 @@ export default {
                 console.log(response.data)
                 this.isLoading = false;
             } catch (error) {
-                alert("Login failed")
+                toast.error("Login failed")
                 console.error(error)
                 this.isLoading = false;
             }

@@ -1,6 +1,12 @@
 <template>
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h3 class="text-lg font-semibold text-gray-900 mb-6">Messages</h3>
+        <h3 class="flex items-center  text-lg font-semibold text-gray-900 mb-6">
+            <svg class="text-blue-600" xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 24 24">
+                <path fill="currentColor"
+                    d="M11 21v-2h8v-7.1q0-2.925-2.037-4.962T12 4.9T7.038 6.938T5 11.9V18H4q-.825 0-1.412-.587T2 16v-2q0-.525.263-.987T3 12.275l.075-1.325q.2-1.7.988-3.15t1.975-2.525T8.762 3.6T12 3t3.225.6t2.725 1.663t1.975 2.512t1 3.15l.075 1.3q.475.225.738.675t.262.95v2.3q0 .5-.262.95t-.738.675V19q0 .825-.587 1.413T19 21zm-2-7q-.425 0-.712-.288T8 13t.288-.712T9 12t.713.288T10 13t-.288.713T9 14m6 0q-.425 0-.712-.288T14 13t.288-.712T15 12t.713.288T16 13t-.288.713T15 14m-8.975-1.55Q5.85 9.8 7.625 7.9T12.05 6q2.225 0 3.913 1.412T18 11.026Q15.725 11 13.813 9.8t-2.938-3.25q-.4 2-1.687 3.563T6.025 12.45" />
+            </svg>
+            Chat Support
+        </h3>
 
         <div class="space-y-4">
             <div class="h-[200px] overflow-y-auto space-y-4">
@@ -39,7 +45,7 @@
                     class="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     @keyup.enter="sendMessage">
                 <button @click="sendMessage"
-                    class="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-lg transition-colors">
+                    class="bg-blue-500 hover:bg-blue-600 text-white p-2 py-3 px-3 rounded-lg transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
                         <path fill="currentColor"
                             d="m3.4 20.4l17.45-7.48a1 1 0 0 0 0-1.84L3.4 3.6a.993.993 0 0 0-1.39.91L2 9.12c0 .5.37.93.87.99L17 12L2.87 13.88c-.5.07-.87.5-.87 1l.01 4.61c0 .71.73 1.2 1.39.91" />
