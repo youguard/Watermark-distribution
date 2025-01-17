@@ -163,6 +163,6 @@ router.put('/user/reset-password/:resettoken', resetPassword)
  *       500:
  *         description: Internal server error
  */
-router.put('/user/change-password', changePassword)
+router.put('/user/change-password', protect, changePassword)
 router.post('/user/verify-email', verifyEmail)
 module.exports = router
