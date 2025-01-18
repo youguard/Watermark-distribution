@@ -149,7 +149,11 @@ const updateProfile = async () => {
     isLoading.value = true
     try {
         await axios.put(`https://watermark-distribution.onrender.com/api/users/${user.value.ID}`,
-            user.value,
+            {
+                name : user.value.Name,
+                username : user.value.Username,
+                email: user.value.Email
+            },
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
