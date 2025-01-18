@@ -96,15 +96,7 @@
                                         </button>
                                     </div>
 
-                                    <div class="text-center">
-                                        <p class="text-base text-gray-600">Don't have an account?
-                                            <NuxtLink to="/admin/signup" title=""
-                                                class="font-medium text-orange-500 transition-all duration-200 hover:text-orange-600 hover:underline">
-                                                Sign up
-                                                here
-                                            </NuxtLink>
-                                        </p>
-                                    </div>
+                                  
                                 </div>
                             </form>
                         </div>

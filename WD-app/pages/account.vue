@@ -152,8 +152,9 @@ const updateProfile = async () => {
             {
                 name : user.value.Name,
                 username : user.value.Username,
-                email: user.value.Email
+                email: user.value.Email,
             },
+
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
