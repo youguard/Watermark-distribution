@@ -201,10 +201,40 @@ const changePassword = async (req, res) => {
     }
 }
 
+const getAdminDetails = async(req, res) => {
+    try{
+        const adminId = req.user._id
+        const admin = await Admin.findById(adminId)
+        if(!admin){
+            return res.status(404).json({ message: 'Admin not found'})
+        }
+
+        const adminInfo = {
+            name: admin.name,
+            email: admin.email,
+            role: admin.role
+        }
+
+        res.status(200).json({
+            success:true,
+            message: 'Admin Details fetched successfully',
+            adminInfo
+        })
+    }
+    catch(err){
+        res.status(500).json({
+            success: false,
+            message: 'Internal Server Error',
+            error: err.message
+        })
+    }
+}
+
 module.exports = {
     signup,
     login,
     forgotPassword,
     resetPassword,
-    changePassword
+    changePassword,
+    getAdminDetails
 }

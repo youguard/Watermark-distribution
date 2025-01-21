@@ -1,5 +1,5 @@
-const { signup, login, forgotPassword, resetPassword, changePassword} = require('../controllers/adminAuthController')
-const {protect} = require('../middlewares/authMiddleware')
+const { signup, login, forgotPassword, resetPassword, changePassword, getAdminDetails} = require('../controllers/adminAuthController')
+const {protect, isAdmin} = require('../middlewares/authMiddleware')
 const router = require('express').Router()
 
 /**
@@ -157,6 +157,7 @@ router.put('/admin/reset-password', resetPassword)
  *       500:
  *         description: Internal server error
  */
-router.put('/admin/change-password', changePassword)
+router.put('/admin/change-password', protect, changePassword)
+router.get('/admin/details', protect, getAdminDetails)
 
 module.exports = router
