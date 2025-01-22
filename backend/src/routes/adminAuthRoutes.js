@@ -1,4 +1,4 @@
-const { signup, login, forgotPassword, resetPassword, changePassword, getAdminDetails} = require('../controllers/adminAuthController')
+const { signup, login, forgotPassword, resetPassword, changePassword, getAdminDetails, changeName} = require('../controllers/adminAuthController')
 const {protect, isAdmin} = require('../middlewares/authMiddleware')
 const router = require('express').Router()
 
@@ -159,5 +159,6 @@ router.put('/admin/reset-password', resetPassword)
  */
 router.put('/admin/change-password', protect, changePassword)
 router.get('/admin/details', protect, getAdminDetails)
+router.put('/admin/change-name', protect, changeName)
 
 module.exports = router
