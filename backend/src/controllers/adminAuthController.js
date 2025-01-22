@@ -174,7 +174,8 @@ const resetPassword = async (req, res) => {
 
 const changePassword = async (req, res) => {
     try{
-        const adminId = req.user_id
+        const adminId = req.user._id
+        console.log(adminId)
         const admin = await Admin.findById(adminId)
         if(!admin){
             return res.status(400).json({message: 'Admin not found'})
@@ -191,6 +192,11 @@ const changePassword = async (req, res) => {
 
         admin.password = hashedPassword
         await admin.save()
+
+        res.status(200).json({
+            success: true,
+            message: 'Password updated successfully'
+        })
     }
     catch(err){
         res.status(500).json({
