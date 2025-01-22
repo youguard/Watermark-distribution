@@ -19,9 +19,9 @@
                         <button class="p-2 rounded-full hover:bg-gray-100">
                         </button>
                         <div class="flex items-center space-x-2">
-                            <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center">
+                            <NuxtLink to="/admin/account" class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center">
                                 <span class="text-white text-sm">AD</span>
-                            </div>
+                            </NuxtLink>
                         </div>
                     </div>
                 </div>

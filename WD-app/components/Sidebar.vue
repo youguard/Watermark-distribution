@@ -12,11 +12,11 @@
                 </div>
 
 
-                <div class="hidden md:flex px-4 mt-6">
+                <div class="hidden md:flex px-4 mt-16 md:mt-6">
                     <hr class="border-gray-200" />
                 </div>
 
-                <div class="flex flex-col flex-1 px-3 md:mt-6">
+                <div class="flex flex-col flex-1 px-3 mt-8 md:mt-6">
                     <div class="space-y-4">
                         <nav class="flex-1 space-y-2">
                             <a href="/admin" title=""
