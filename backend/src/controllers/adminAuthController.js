@@ -230,11 +230,39 @@ const getAdminDetails = async(req, res) => {
     }
 }
 
+const changeName = async(req, res) => {
+    try{
+        const adminId = req.user._id
+        const admin = await Admin.findById(adminId)
+        if(!admin){
+            return res.status(404).json({ message: 'Admin not found'})
+        }
+
+        const { name } = req.body
+        admin.name = name
+        await admin.save()
+
+        res.status(200).json({
+            success: true,
+            message: 'Admin name changed successfully',
+            name: admin.name
+        })
+    }
+    catch(err){
+        res.status(500).json({
+            success: false,
+            message: 'Internal Server Error',
+            error: err.message
+        })
+    }
+}
+
 module.exports = {
     signup,
     login,
     forgotPassword,
     resetPassword,
     changePassword,
-    getAdminDetails
+    getAdminDetails,
+    changeName
 }
