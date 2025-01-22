@@ -177,7 +177,7 @@ const changePassword = async (req, res) => {
         const adminId = req.user_id
         const admin = await Admin.findById(adminId)
         if(!admin){
-            return res.status(400).json({message: 'Admin not authenticated'})
+            return res.status(400).json({message: 'Admin not found'})
         }
 
         const {password, newPassword} = req.body
