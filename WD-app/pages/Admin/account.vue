@@ -15,26 +15,14 @@
                                         class="h-full w-full flex items-center justify-center bg-indigo-100 text-indigo-600 text-2xl font-bold">
                                         {{ getInitials(adminData.name) }}
                                     </div>
-                                    <input type="file" ref="fileInput" @change="handleAvatarUpload" class="hidden"
-                                        accept="image/*" />
                                 </div>
-                                <!-- <button @click="$refs.fileInput.click()"
-                                    class="absolute bottom-0 right-0 p-2 rounded-full bg-white shadow-lg hover:bg-gray-50 transition-colors">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round">
-                                        <path
-                                            d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
-                                        <circle cx="12" cy="13" r="4" />
-                                    </svg>
-                                </button> -->
                             </div>
                             <div class="text-center md:text-left">
                                 <h1 class="text-2xl font-bold text-gray-900">{{ adminData.name }}</h1>
                                 <p class="text-gray-500">{{ adminData.email }}</p>
                                 <p class="text-sm text-gray-400 mt-1">{{ adminData.title || 'System Administrator' }}
                                 </p>
-                                <!-- <p class="text-sm text-gray-400">Member since: {{ formatDate(adminData.joinDate) }}</p> -->
+
                             </div>
                         </div>
                     </div>
@@ -108,8 +96,8 @@
                                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
                                     <button type="button" @click="showPassword = !showPassword"
                                         class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5">
-                                        <svg v-if="!showPassword" xmlns="http://www.w3.org/2000/svg"
-                                            width="1.5em" height="1.5em" viewBox="0 0 20 20">
+                                        <svg v-if="!showPassword" xmlns="http://www.w3.org/2000/svg" width="1.5em"
+                                            height="1.5em" viewBox="0 0 20 20">
                                             <path fill="currentColor"
                                                 d="M18.521 1.478a1 1 0 0 0-1.414 0L1.48 17.107a1 1 0 1 0 1.414 1.414L18.52 2.892a1 1 0 0 0 0-1.414zM3.108 13.498l2.56-2.56A4.2 4.2 0 0 1 5.555 10c0-2.379 1.99-4.309 4.445-4.309c.286 0 .564.032.835.082l1.203-1.202A13 13 0 0 0 10 4.401C3.44 4.4 0 9.231 0 10c0 .423 1.057 2.09 3.108 3.497zm13.787-6.993l-2.562 2.56c.069.302.111.613.111.935c0 2.379-1.989 4.307-4.444 4.307c-.284 0-.56-.032-.829-.081l-1.204 1.203c.642.104 1.316.17 2.033.17c6.56 0 10-4.833 10-5.599c0-.424-1.056-2.09-3.105-3.495" />
                                         </svg>
@@ -132,8 +120,8 @@
                                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" />
                                     <button type="button" @click="showNewPassword = !showNewPassword"
                                         class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5">
-                                        <svg v-if="!showNewPassword" xmlns="http://www.w3.org/2000/svg"
-                                            width="1.5em" height="1.5em" viewBox="0 0 20 20">
+                                        <svg v-if="!showNewPassword" xmlns="http://www.w3.org/2000/svg" width="1.5em"
+                                            height="1.5em" viewBox="0 0 20 20">
                                             <path fill="currentColor"
                                                 d="M18.521 1.478a1 1 0 0 0-1.414 0L1.48 17.107a1 1 0 1 0 1.414 1.414L18.52 2.892a1 1 0 0 0 0-1.414zM3.108 13.498l2.56-2.56A4.2 4.2 0 0 1 5.555 10c0-2.379 1.99-4.309 4.445-4.309c.286 0 .564.032.835.082l1.203-1.202A13 13 0 0 0 10 4.401C3.44 4.4 0 9.231 0 10c0 .423 1.057 2.09 3.108 3.497zm13.787-6.993l-2.562 2.56c.069.302.111.613.111.935c0 2.379-1.989 4.307-4.444 4.307c-.284 0-.56-.032-.829-.081l-1.204 1.203c.642.104 1.316.17 2.033.17c6.56 0 10-4.833 10-5.599c0-.424-1.056-2.09-3.105-3.495" />
                                         </svg>
@@ -282,7 +270,7 @@ const handleProfileUpdate = async () => {
             }
         )
 
-       toast.success('Profile updated successfully')
+        toast.success('Profile updated successfully')
 
         // Refresh admin data
         await fetchUserDetails()
@@ -309,8 +297,8 @@ const handlePasswordChange = async () => {
         await axios.put('https://watermark-distribution.onrender.com/api/admin/change-password',
             {
 
-                password: passwordForm.currentPassword,
-                newPassword: passwordForm.newPassword,
+                password: passwordForm.value.currentPassword,
+                newPassword: passwordForm.value.newPassword,
             },
             {
                 headers: {
