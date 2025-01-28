@@ -9,22 +9,24 @@
                         <span class="text-xl font-medium uppercase font-bold"> <span
                                 class="text-blue-700">You</span>Guard</span>
                     </NuxtLink>
-                    <div class="flex items-center space-x-4">
+                    <div class="flex text-center items-center space-x-8">
 
-                        <NuxtLink to="/account" class="space-x-1 ml-4">
-                            <Icon icon="solar:settings-linear" width="1.5em" height="1.5em" />
+                        <NuxtLink to="/editor" class="flex flex-col items-center space-y-1 mx-auto ml-4">
+                            <Icon class="text-center" icon="proicons:pencil" width="1.5em" height="1.5em" />
+                            <span class="text-xs font-semibold text-center hidden sm:block">Editor</span>
                         </NuxtLink>
 
-
-
                         <!-- Notification Icon -->
-                        <button @click="toggleModal" class="relative">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 24 24">
-                                <path fill="#000" fill-rule="evenodd"
-                                    d="M12 1.25A7.75 7.75 0 0 0 4.25 9v.704a3.53 3.53 0 0 1-.593 1.958L2.51 13.385c-1.334 2-.316 4.718 2.003 5.35q1.133.309 2.284.523l.002.005C7.567 21.315 9.622 22.75 12 22.75s4.433-1.435 5.202-3.487l.002-.005a29 29 0 0 0 2.284-.523c2.319-.632 3.337-3.35 2.003-5.35l-1.148-1.723a3.53 3.53 0 0 1-.593-1.958V9A7.75 7.75 0 0 0 12 1.25m3.376 18.287a28.5 28.5 0 0 1-6.753 0c.711 1.021 1.948 1.713 3.377 1.713s2.665-.692 3.376-1.713M5.75 9a6.25 6.25 0 1 1 12.5 0v.704c0 .993.294 1.964.845 2.79l1.148 1.723a2.02 2.02 0 0 1-1.15 3.071a26.96 26.96 0 0 1-14.187 0a2.02 2.02 0 0 1-1.15-3.07l1.15-1.724a5.03 5.03 0 0 0 .844-2.79z"
-                                    clip-rule="evenodd" />
-                            </svg>
+                        <button @click="toggleModal" class="relative flex flex-col items-center space-y-1">
+                            <Icon icon="stash:bell" width="1.5em" height="1.5em" />
+                            <span class="text-xs font-semibold text-center hidden sm:block">Notification</span>
                         </button>
+
+                        <NuxtLink to="/account" class="flex flex-col items-center space-y-1 ml-4">
+                            <Icon icon="solar:settings-linear" width="1.5em" height="1.5em" />
+                            <span class="text-xs font-semibold text-center hidden sm:block">Account</span>
+                        </NuxtLink>
+
 
                         <button @click="logout" class="text-gray-600 hover:text-gray-900 flex items-center space-x-1">
                             <Icon name="mdi:logout" class="h-5 w-5" />

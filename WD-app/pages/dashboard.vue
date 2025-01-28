@@ -22,9 +22,9 @@
                 </div>
             </div>
 
-            <div class="grid md:grid-cols-2 gap-6">
+            <div class="grid md:grid-cols-1 gap-6">
                 <!-- Software Section -->
-                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                <!-- <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
                     <div class="flex items-center justify-between mb-6">
                         <h3 class="text-lg font-semibold text-gray-900">Software</h3>
                         <span class="text-sm text-gray-500 capitalize"> {{ currentVersion.version
@@ -51,7 +51,7 @@
                             Your account is pending approval. Once approved, you'll be able to download the software.
                         </p>
                     </div>
-                </div>
+                </div> -->
 
                 <!-- Messages Section -->
                 <UserMessaging />
