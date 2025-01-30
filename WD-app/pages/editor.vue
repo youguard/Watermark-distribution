@@ -1,12 +1,13 @@
 <template>
     <div class="min-h-screen bg-gray-50 ">
         <Header />
-        <div v-if="userDetails.Approval === true" class="max-w-4xl mt-16 md:mt-28 mx-auto p-4">
+        <div v-if="userDetails.Approval === true" class="max-w-4xl mt-4 md:mt-4 mx-auto p-4">
+            <h1 class="text-4xl font-medium mb-4 text-center">Watermark Editor</h1>
             <div class="relative">
                 <div ref="containerRef"
                     class="relative w-full aspect-video bg-gray-100 rounded overflow-hidden cursor-move"
                     @mousedown="handleMouseDown" @mousemove="handleMouseMove" @mouseup="handleMouseUp"
-                    @mouseleave="handleMouseUp">
+                    @mouseleave="handleMouseUp" @click="!baseImage && triggerFileUpload">
                     <img v-if="baseImage" ref="baseImageRef" :src="baseImage" alt="Base"
                         class="w-full h-full md:w-full md:h-full object-contain" />
                     <div v-if="baseImage && watermarkType === 'text'" :style="{
@@ -39,6 +40,7 @@
                             <p>Upload an image to begin</p>
                         </div>
                     </div>
+                    <input type="file" accept="image/*" @change="handleBaseImageUpload" ref="fileInput" class="hidden" />
                 </div>
             </div>
             <div v-if="baseImage" class="mt-2 text-sm text-gray-500 text-center">
@@ -80,11 +82,11 @@
                     </button>
                 </div>
                 <div class="flex gap-4">
-                    <div class="flex-1">
+                    <!-- <div class="flex-1">
                         <label class="block text-sm font-medium mb-2">Upload Base Image</label>
                         <input type="file" accept="image/*" @change="handleBaseImageUpload"
                             class="w-full p-2 border rounded" />
-                    </div>
+                    </div> -->
                     <div v-if="watermarkType === 'image'" class="flex-1">
                         <label class="block text-sm font-medium mb-2">Upload Watermark Image</label>
                         <input type="file" accept="image/*" @change="handleWatermarkImageUpload"
@@ -128,6 +130,8 @@
 
 <script>
 import { Icon } from '@iconify/vue/dist/iconify.js';
+import axios from 'axios';
+
 
 
 export default {
@@ -153,6 +157,9 @@ export default {
         };
     },
     methods: {
+        triggerFileUpload() {
+            this.$refs.fileInput.click();
+        },
         async fetchUserDetails() {
             try {
                 const token = localStorage.getItem("accessToken")
@@ -283,6 +290,10 @@ export default {
             this.watermarkType = type;
         },
     },
+
+    mounted() {
+        this.fetchUserDetails()
+    }
 };
 </script>
 

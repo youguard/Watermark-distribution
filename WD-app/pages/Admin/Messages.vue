@@ -207,7 +207,7 @@ const fetchUserName = async (id) => {
         const data = await axios.get(`https://watermark-distribution.onrender.com/api/users/${id}`);
         console.log("chat user:", data.data);
 
-        return data.data.user.username || "Unknown User";
+        return data.data.user.fullName || "Unknown User";
     } catch (error) {
         console.error(`Error fetching username for ID ${id}:`, error);
         return "Unknown User";
