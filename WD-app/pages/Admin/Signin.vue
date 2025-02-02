@@ -47,13 +47,29 @@
                                                 </svg>
                                             </div>
 
-                                            <input type="password" name="" id="" placeholder="Enter your password"
+                                            <input :type="showPassword ? 'text' : 'password'" name="" id=""
+                                                placeholder="Enter your password"
                                                 class="block w-full py-4 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 bg-white border border-gray-200 rounded-md focus:outline-none focus:border-blue-600 caret-blue-600"
                                                 v-model="password" />
-                                        </div>
-                                    </div>
+                                            <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                                                <button type="button" @click="togglePasswordVisibility"
+                                                    class="focus:outline-none">
+                                                    <svg v-if="showPassword" xmlns="http://www.w3.org/2000/svg"
+                                                        width="1.5em" height="1.5em" viewBox="0 0 24 24">
+                                                        <path fill="currentColor" fill-rule="evenodd"
+                                                            d="M12 17.8c4.034 0 7.686-2.25 9.648-5.8C19.686 8.45 16.034 6.2 12 6.2S4.314 8.45 2.352 12c1.962 3.55 5.614 5.8 9.648 5.8M12 5c4.808 0 8.972 2.848 11 7c-2.028 4.152-6.192 7-11 7s-8.972-2.848-11-7c2.028-4.152 6.192-7 11-7m0 9.8a2.8 2.8 0 1 0 0-5.6a2.8 2.8 0 0 0 0 5.6m0 1.2a4 4 0 1 1 0-8a4 4 0 0 1 0 8" />
+                                                    </svg>
 
-                                    <!-- <div class="flex items-center">
+                                                    <svg v-else xmlns="http://www.w3.org/2000/svg" width="1.5em"
+                                                        height="1.5em" viewBox="0 0 24 24">
+                                                        <path fill="currentColor" fill-rule="evenodd"
+                                                            d="m18.67 16.973l2.755 2.755l-.849.848L3.85 3.85L4.697 3l2.855 2.855C8.932 5.303 10.432 5 12 5c4.808 0 8.972 2.848 11 7a12.65 12.65 0 0 1-4.33 4.973M8.486 6.79l1.664 1.664a4 4 0 0 1 5.398 5.398l2.255 2.255c1.574-1 2.904-2.403 3.845-4.106C19.686 8.45 16.034 6.2 12 6.2a10.8 10.8 0 0 0-3.514.59m6.152 6.152a2.8 2.8 0 0 0-3.579-3.579zm1.81 5.204c-1.38.552-2.88.855-4.448.855c-4.808 0-8.972-2.848-11-7a12.65 12.65 0 0 1 4.33-4.973l.867.867A11.36 11.36 0 0 0 2.352 12c1.962 3.55 5.614 5.8 9.648 5.8a10.8 10.8 0 0 0 3.514-.59l.934.935zM8.453 10.15l.909.91a2.8 2.8 0 0 0 3.579 3.579l.91.908a4 4 0 0 1-5.398-5.398z" />
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- <div class="flex items-center">
                                         <input type="checkbox" name="agree" id="agree"
                                             class="w-5 h-5 text-green-500 bg-white border-gray-200 rounded" checked />
 
@@ -66,45 +82,39 @@
                                         </label>
                                     </div> -->
 
-                                    <div>
-                                        <button type="button" @click="login"
-                                            class="inline-flex items-center justify-center w-full px-4 py-4 text-base font-semibold text-white transition-all duration-200 bg-blue-600 border border-transparent rounded-md focus:outline-none hover:bg-blue-700 focus:bg-blue-700">
-                                            <span v-if="isLoading" class="mr-2">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em"
-                                                    viewBox="0 0 24 24">
-                                                    <circle cx="18" cy="12" r="0" fill="#fff">
-                                                        <animate attributeName="r" begin=".67" calcMode="spline"
-                                                            dur="1.5s"
-                                                            keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8"
-                                                            repeatCount="indefinite" values="0;2;0;0" />
-                                                    </circle>
-                                                    <circle cx="12" cy="12" r="0" fill="#fff">
-                                                        <animate attributeName="r" begin=".33" calcMode="spline"
-                                                            dur="1.5s"
-                                                            keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8"
-                                                            repeatCount="indefinite" values="0;2;0;0" />
-                                                    </circle>
-                                                    <circle cx="6" cy="12" r="0" fill="#fff">
-                                                        <animate attributeName="r" begin="0" calcMode="spline"
-                                                            dur="1.5s"
-                                                            keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8"
-                                                            repeatCount="indefinite" values="0;2;0;0" />
-                                                    </circle>
-                                                </svg>
-                                            </span>
-                                            <span v-else> Sign in</span>
-                                        </button>
+                                        <div>
+                                            <button type="button" @click="login"
+                                                class="inline-flex items-center justify-center w-full mt-4 px-4 py-4 text-base font-semibold text-white transition-all duration-200 bg-blue-600 border border-transparent rounded-md focus:outline-none hover:bg-blue-700 focus:bg-blue-700">
+                                                <span v-if="isLoading" class="mr-2">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em"
+                                                        viewBox="0 0 24 24">
+                                                        <circle cx="18" cy="12" r="0" fill="#fff">
+                                                            <animate attributeName="r" begin=".67" calcMode="spline"
+                                                                dur="1.5s"
+                                                                keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8"
+                                                                repeatCount="indefinite" values="0;2;0;0" />
+                                                        </circle>
+                                                        <circle cx="12" cy="12" r="0" fill="#fff">
+                                                            <animate attributeName="r" begin=".33" calcMode="spline"
+                                                                dur="1.5s"
+                                                                keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8"
+                                                                repeatCount="indefinite" values="0;2;0;0" />
+                                                        </circle>
+                                                        <circle cx="6" cy="12" r="0" fill="#fff">
+                                                            <animate attributeName="r" begin="0" calcMode="spline"
+                                                                dur="1.5s"
+                                                                keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8"
+                                                                repeatCount="indefinite" values="0;2;0;0" />
+                                                        </circle>
+                                                    </svg>
+                                                </span>
+                                                <span v-else> Sign in</span>
+                                            </button>
+                                        </div>
+
+
                                     </div>
 
-                                    <div class="text-center">
-                                        <p class="text-base text-gray-600">Don't have an account?
-                                            <NuxtLink to="/admin/signup" title=""
-                                                class="font-medium text-orange-500 transition-all duration-200 hover:text-orange-600 hover:underline">
-                                                Sign up
-                                                here
-                                            </NuxtLink>
-                                        </p>
-                                    </div>
                                 </div>
                             </form>
                         </div>
@@ -117,12 +127,15 @@
 
 <script>
 import axios from 'axios';
+import { toast } from 'vue3-toastify';
+
 export default {
     data() {
         return {
             email: '',
             password: '',
-            isLoading: false
+            isLoading: false,
+            showPassword: false
         }
     },
     methods: {
@@ -138,14 +151,17 @@ export default {
                 localStorage.setItem("role", response.data.role);
                 console.log(response.data)
                 this.$router.push("/admin")
-                alert("Login successful")
+                toast.success("Login successful")
 
                 this.isLoading = false
             } catch (error) {
-                alert("Login failed")
+                toast.error("Login failed")
                 console.error(error)
                 this.isLoading = false
             }
+        },
+        togglePasswordVisibility() {
+            this.showPassword = !this.showPassword;
         }
     }
 }

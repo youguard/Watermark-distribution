@@ -2,6 +2,8 @@
     <div>
         <section class="bg-white">
             <div class="grid grid-cols-1 lg:grid-cols-2">
+
+
                 <div
                     class="relative hidden md:flex items-end px-4 pb-10 pt-60 sm:pb-16 md:justify-center lg:pb-24 bg-gray-50 sm:px-6 lg:px-8">
                     <div class="absolute inset-0">
@@ -9,16 +11,31 @@
                             src="https://cdn.rareblocks.xyz/collection/celebration/images/signup/4/girl-working-on-laptop.jpg"
                             alt="" />
                     </div>
+                    <div class="z-20">
+                        <div class="flex z-20 items-center">
+                            <Icon icon="material-symbols:water-drop-outline-rounded" width="4em" height="4em"
+                                class="text-blue-600" />
+                            <span class="text-6xl font-medium uppercase text-white font-bold"> <span
+                                    class="text-blue-700">You</span>Guard</span>
+                        </div>
+                    </div>
                     <div class="absolute h-screen inset-0 bg-gradient-to-t from-black to-transparent"></div>
-
-
                 </div>
+
+
+
+
+
+
+
+
 
                 <div class="flex items-center justify-center px-4 py-10 bg-white sm:px-6 lg:px-8 sm:py-16 lg:py-24">
                     <div class="xl:w-full xl:max-w-sm w-full xl:mx-auto">
                         <h2 class="text-3xl font-bold leading-tight text-black sm:text-4xl">Sign in</h2>
                         <p class="mt-2 text-base text-gray-600">Don't have an account? <NuxtLink href="/signup" title=""
-                                class="font-medium text-blue-600 transition-all duration-200 hover:text-blue-700 focus:text-blue-700 hover:underline">Register</NuxtLink>
+                                class="font-medium text-blue-600 transition-all duration-200 hover:text-blue-700 focus:text-blue-700 hover:underline">
+                                Register</NuxtLink>
                         </p>
 
                         <form action="#" method="POST" class="mt-8">
@@ -54,15 +71,32 @@
                                             </svg>
                                         </div>
 
-                                        <input type="password" name="" id="pass" placeholder="Enter your password"
+                                        <input :type="showPassword ? 'text' : 'password'" name="" id="pass"
+                                            placeholder="Enter your password"
                                             class="block w-full py-4 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600"
                                             v-model="password" />
+                                        <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                                            <button type="button" @click="togglePasswordVisibility"
+                                                class="focus:outline-none">
+                                                <svg v-if="showPassword" xmlns="http://www.w3.org/2000/svg"
+                                                    width="1.5em" height="1.5em" viewBox="0 0 24 24">
+                                                    <path fill="currentColor" fill-rule="evenodd"
+                                                        d="M12 17.8c4.034 0 7.686-2.25 9.648-5.8C19.686 8.45 16.034 6.2 12 6.2S4.314 8.45 2.352 12c1.962 3.55 5.614 5.8 9.648 5.8M12 5c4.808 0 8.972 2.848 11 7c-2.028 4.152-6.192 7-11 7s-8.972-2.848-11-7c2.028-4.152 6.192-7 11-7m0 9.8a2.8 2.8 0 1 0 0-5.6a2.8 2.8 0 0 0 0 5.6m0 1.2a4 4 0 1 1 0-8a4 4 0 0 1 0 8" />
+                                                </svg>
+
+                                                <svg v-else xmlns="http://www.w3.org/2000/svg" width="1.5em"
+                                                    height="1.5em" viewBox="0 0 24 24">
+                                                    <path fill="currentColor" fill-rule="evenodd"
+                                                        d="m18.67 16.973l2.755 2.755l-.849.848L3.85 3.85L4.697 3l2.855 2.855C8.932 5.303 10.432 5 12 5c4.808 0 8.972 2.848 11 7a12.65 12.65 0 0 1-4.33 4.973M8.486 6.79l1.664 1.664a4 4 0 0 1 5.398 5.398l2.255 2.255c1.574-1 2.904-2.403 3.845-4.106C19.686 8.45 16.034 6.2 12 6.2a10.8 10.8 0 0 0-3.514.59m6.152 6.152a2.8 2.8 0 0 0-3.579-3.579zm1.81 5.204c-1.38.552-2.88.855-4.448.855c-4.808 0-8.972-2.848-11-7a12.65 12.65 0 0 1 4.33-4.973l.867.867A11.36 11.36 0 0 0 2.352 12c1.962 3.55 5.614 5.8 9.648 5.8a10.8 10.8 0 0 0 3.514-.59l.934.935zM8.453 10.15l.909.91a2.8 2.8 0 0 0 3.579 3.579l.91.908a4 4 0 0 1-5.398-5.398z" />
+                                                </svg>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
 
                                 <div>
                                     <button type="button"
-                                        class="inline-flex items-center justify-center w-full px-4 py-4 text-base font-semibold text-white transition-all duration-200 border border-transparent rounded-md bg-gradient-to-r from-fuchsia-600 to-blue-600 focus:outline-none hover:opacity-80 focus:opacity-80"
+                                        class="inline-flex items-center justify-center w-full px-4 py-4 text-base font-semibold text-white transition-all duration-200 border border-transparent rounded-md bg-blue-600 focus:outline-none hover:opacity-80 focus:opacity-80"
                                         @click="login">
                                         <span v-if="isLoading" class="mr-2">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em"
@@ -86,6 +120,13 @@
                                         </span>
                                         <span v-else> Sign in</span>
                                     </button>
+
+                                    <p class="mt-2 text-base text-gray-600">
+                                        <NuxtLink href="/forgot-password" title=""
+                                            class="font-medium text-blue-600 transition-all duration-200 hover:text-blue-700 focus:text-blue-700 hover:underline">
+                                            Forgot password?
+                                        </NuxtLink>
+                                    </p>
                                 </div>
                             </div>
                         </form>
@@ -110,17 +151,23 @@
 
 <script>
 import axios from 'axios';
+import { toast } from 'vue3-toastify';
+import { Icon } from "@iconify/vue";
+
 export default {
+    components: {
+        Icon
+    },
     data() {
         return {
             email: '',
             password: '',
-            isLoading: false
+            isLoading: false,
+            showPassword: false
         }
     },
     methods: {
         async login() {
-
             try {
                 this.isLoading = true;
                 const response = await axios.post('https://watermark-distribution.onrender.com/api/user/login', {
@@ -132,14 +179,17 @@ export default {
                 localStorage.setItem("role", response.data.userRole);
 
                 navigateTo("/dashboard");
-                alert("Login successful")
+                toast.success("Login successful")
                 console.log(response.data)
                 this.isLoading = false;
             } catch (error) {
-                alert("Login failed")
+                toast.error("Login failed")
                 console.error(error)
                 this.isLoading = false;
             }
+        },
+        togglePasswordVisibility() {
+            this.showPassword = !this.showPassword;
         }
     }
 }

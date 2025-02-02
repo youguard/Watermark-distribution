@@ -1,26 +1,26 @@
 <template>
     <main>
-        <div class="md:flex md:w-64 md:flex-col h-screen bg-white z-99 md:h-auto">
+        <div class="md:flex md:w-64 md:flex-col h-screen bg-white shadow z-99 md:h-auto">
             <div class="flex flex-col flex-grow pt-5 overflow-y-auto h-full z-99 bg-white">
-                <div class="flex items-center flex-shrink-0 px-4">
+                <div class="flex  items-center md:flex-shrink-0 px-4">
                     <Icon icon="material-symbols:water-drop-outline-rounded" width="1.5em" height="1.5em"
                         class="text-blue-600" />
 
-                    <NuxtLink to="/admin" class="text-xl font-medium uppercase font-bold"> <span
-                            class="text-blue-700">You</span>Guard
+                    <NuxtLink to="/admin" class="text-xl font-medium uppercase font-bold">
+                        <span class="text-blue-700">You</span>Guard
                     </NuxtLink>
-
                 </div>
 
-                <div class="px-4 mt-6">
+
+                <div class="hidden md:flex px-4 mt-16 md:mt-6">
                     <hr class="border-gray-200" />
                 </div>
 
-                <div class="flex flex-col flex-1 px-3 mt-6">
+                <div class="flex flex-col flex-1 px-3 mt-8 md:mt-6">
                     <div class="space-y-4">
                         <nav class="flex-1 space-y-2">
                             <a href="/admin" title=""
-                                class="flex items-center px-4 py-2.5 text-lg font-medium text-white transition-all duration-200 bg-indigo-600 rounded-lg group">
+                                class="flex items-center px-4 py-2.5 text-md font-medium text-white transition-all duration-200 bg-indigo-600 rounded-lg group">
                                 <svg class="flex-shrink-0 w-5 h-5 mr-4 text-white w-6 h-6"
                                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke="currentColor" stroke-width="2">
@@ -31,7 +31,7 @@
                             </a>
 
                             <a href="/admin/messages"
-                                class="flex items-center px-4 py-2.5 text-lg font-medium transition-all duration-200 text-gray-900 hover:text-white rounded-lg hover:bg-indigo-600 group">
+                                class="flex items-center px-4 py-2.5 text-md font-medium transition-all duration-200 text-gray-900 hover:text-white rounded-lg hover:bg-indigo-600 group">
 
 
                                 <svg class="flex-shrink-0 w-5 h-5 mr-4" xmlns="http://www.w3.org/2000/svg" width="2"
@@ -49,7 +49,7 @@
                             </a>
 
                             <a href="/admin/users"
-                                class="flex items-center px-4 py-2.5 text-lg font-medium transition-all duration-200 text-gray-900 hover:text-white rounded-lg hover:bg-indigo-600 group">
+                                class="flex items-center px-4 py-2.5 text-md font-medium transition-all duration-200 text-gray-900 hover:text-white rounded-lg hover:bg-indigo-600 group">
                                 <svg class="flex-shrink-0 w-5 h-5 mr-4" xmlns="http://www.w3.org/2000/svg" fill="none"
                                     viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -59,26 +59,17 @@
                             </a>
 
                             <a href="/admin/notifications"
-                                class="flex items-center px-4 py-2.5 text-lg font-medium transition-all duration-200 text-gray-900 hover:text-white rounded-lg hover:bg-indigo-600 group">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0 w-5 h-5 mr-4"
-                                    viewBox="0 0 24 24">
-                                    <g fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="1.5" color="#000">
-                                        <path
-                                            d="M2.53 14.77c-.213 1.394.738 2.361 1.902 2.843c4.463 1.85 10.673 1.85 15.136 0c1.164-.482 2.115-1.45 1.902-2.843c-.13-.857-.777-1.57-1.256-2.267c-.627-.924-.689-1.931-.69-3.003C19.525 5.358 16.157 2 12 2S4.475 5.358 4.475 9.5c0 1.072-.062 2.08-.69 3.003c-.478.697-1.124 1.41-1.255 2.267" />
-                                        <path d="M8 19c.458 1.725 2.076 3 4 3c1.925 0 3.541-1.275 4-3" />
-                                    </g>
-                                </svg>
-                                Notifications
+                                class="flex items-center px-4 py-2.5 text-md font-medium transition-all duration-200 text-gray-900 hover:text-white rounded-lg hover:bg-indigo-600 group">
+
+
+                                <Icon class="flex-shrink-0 w-5 h-5 mr-4" icon="ant-design:notification-outlined"
+                                    width="1.5em" height="1.5em" />
+                                Announcements
                             </a>
 
                             <a href="/admin/software"
-                                class="flex items-center px-4 py-2.5 text-lg font-medium transition-all duration-200 text-gray-900 hover:text-white rounded-lg hover:bg-indigo-600 group">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0 w-5 h-5 mr-4"
-                                    viewBox="0 0 24 24">
-                                    <path fill="none" stroke="#000" stroke-width="2"
-                                        d="M8 23h8V12H8zm0-7h8m-4-4v4M6 6V5c0-3 1.5-4 4-4h4c2.5 0 4 1.5 4 4v1c3 0 5 2 5 5s-2 5-5 5M14 6H6c-3 0-5 1.5-5 5s2 5 5 5" />
-                                </svg>
+                                class="flex items-center px-4 py-2.5 text-md font-medium transition-all duration-200 text-gray-900 hover:text-white rounded-lg hover:bg-indigo-600 group">
+                                <Icon class="flex-shrink-0 w-5 h-5 mr-4" icon="grommet-icons:cloud-software" />
                                 Software
 
                             </a>

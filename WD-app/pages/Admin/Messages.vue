@@ -1,17 +1,13 @@
 <template>
-  <NuxtLayout name="admindashboard">
-    <div class="h-screen flex flex-col">
-      <!-- Header -->
-      <div class="p-4 border-b flex items-center justify-between">
-        <h1 class="text-2xl font-bold">Messages</h1>
-        <button
-          v-if="showChatRoom && isMobile"
-          @click="goBackToConversations"
-          class="text-blue-500 underline"
-        >
-          Back
-        </button>
-      </div>
+    <NuxtLayout name="admindashboard">
+        <div class="h-screen flex flex-col">
+            <!-- Header -->
+            <div class="p-4 border-b flex items-center justify-between">
+                <h1 class="text-2xl font-bold">Messages</h1>
+                <button v-if="showChatRoom && isMobile" @click="goBackToConversations" class="text-blue-500 underline">
+                    Back
+                </button>
+            </div>
 
       <div class="flex-1 flex overflow-hidden">
         <!-- Conversations List -->
@@ -28,39 +24,26 @@
             />
           </div>
 
-          <div class="space-y-4 m-2">
-            <div
-              class=""
-              v-if="filteredConversations && filteredConversations.length > 0"
-            >
-              <div
-                v-for="conversation in filteredConversations"
-                :key="conversation.id"
-                @click="selectUser(conversation.sender, conversation.name)"
-                class="cursor-pointer hover:bg-gray-100"
-                :class="{
-                  'bg-gray-100': selectedUser?._id === conversation.sender._id,
-                }"
-              >
-                <div
-                  class="flex justify-between items-start border border-gray-100 bg-white p-2 rounded mb-2"
-                >
-                  <div class="flex items-center gap-2">
-                    <div
-                      class="w-12 h-12 rounded-full flex items-center gap-2 justify-center text-white font-bold"
-                      :style="{
-                        backgroundColor: getRandomColor(conversation.id),
-                      }"
-                    >
-                      {{ conversation.name.charAt(0).toUpperCase() }}
-                    </div>
-                    <div>
-                      <h3 class="font-semibold">{{ conversation.name }}</h3>
-                      <p class="text-sm text-gray-600 truncate">
-                        {{ conversation.messages[0].content }}
-                      </p>
-                    </div>
-                  </div>
+                    <div class="space-y-4 m-2">
+                        <div class="" v-if="filteredConversations && filteredConversations.length > 0">
+                            <div v-for="conversation in filteredConversations" :key="conversation.id"
+                                @click="selectUser(conversation.sender, conversation.name)"
+                                class=" cursor-pointer hover:bg-gray-100"
+                                :class="{ 'bg-gray-100': selectedUser?._id === conversation.sender._id }">
+                                <div
+                                    class="flex justify-between items-start border border-gray-100 bg-white p-2 rounded mb-2">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-12 h-12 rounded-full flex items-center gap-2 justify-center text-white font-bold"
+                                            :style="{ backgroundColor: getRandomColor(conversation.id) }">
+                                            {{ conversation.name.charAt(0).toUpperCase() }}
+                                        </div>
+                                        <div>
+                                            <h3 class="font-semibold">{{ conversation.name }}</h3>
+                                            <p class="text-sm text-gray-600 truncate">
+                                                {{ conversation.messages[0].content }}
+                                            </p>
+                                        </div>
+                                    </div>
 
                   <div class="flex flex-col items-end">
                     <span class="text-xs text-gray-500">
@@ -145,8 +128,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
-import axios from "axios";
+
+import { ref, onMounted, computed } from 'vue';
+import axios from 'axios';
 
 const selectedUser = ref(null);
 const selectedUserId = ref(null);
@@ -158,6 +142,7 @@ const messages = ref([]);
 const showChatRoom = ref(false);
 
 const isMobile = computed(() => window.innerWidth < 768);
+
 
 const goBackToConversations = () => {
   selectedUser.value = null;
@@ -203,10 +188,10 @@ const fetchMessages = async () => {
       (msg) => msg?.senderType === "User"
     );
 
-    // Group messages by sender
-    const groupedMessages = userMessages.reduce((acc, msg) => {
-      const senderId = msg.sender._id;
-      console.log("SenderId:", senderId);
+        // Group messages by sender
+        const groupedMessages = userMessages.reduce((acc, msg) => {
+            const senderId = msg.sender._id;
+            console.log("SenderId:", senderId);
 
       if (!acc[senderId]) {
         acc[senderId] = { messages: [], sender: msg.sender };
@@ -237,11 +222,11 @@ const fetchUserName = async (id) => {
     );
     console.log("chat user:", data.data);
 
-    return data.data.user.username || "Unknown User";
-  } catch (error) {
-    console.error(`Error fetching username for ID ${id}:`, error);
-    return "Unknown User";
-  }
+        return data.data.user.username || "Unknown User";
+    } catch (error) {
+        console.error(`Error fetching username for ID ${id}:`, error);
+        return "Unknown User";
+    }
 };
 
 // Filter conversations based on search query
@@ -312,6 +297,7 @@ const sendMessage = async () => {
 //     }
 // }
 
+
 const formatDate = (dateString) => {
   if (!dateString) return "Invalid date";
 
@@ -343,8 +329,8 @@ const formatDate = (dateString) => {
 };
 
 onMounted(() => {
-  if (process.client) {
-    fetchMessages(); // Fetch only on the client-side
-  }
+    if (process.client) {
+        fetchMessages(); // Fetch only on the client-side
+    }
 });
 </script>

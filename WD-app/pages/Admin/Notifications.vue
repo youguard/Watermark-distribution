@@ -4,7 +4,7 @@
             <!-- Header -->
             <div class="mb-6">
                 <div class="flex justify-between items-center">
-                    <h1 class="text-2xl font-bold text-gray-900">Notifications</h1>
+                    <h1 class="text-2xl font-bold text-gray-900">Announcements</h1>
                     <div class="flex gap-3">
                         <button @click="clearAllNotifications"
                             class="px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors">
@@ -35,7 +35,7 @@
                             <div class="flex items-start justify-between">
                                 <div class="flex-1">
                                     <p class="font-medium text-gray-900">{{ notification.title }}</p>
-                                    <p class="text-gray-600 mt-1">{{ notification.message }}</p>
+                                    <p class="text-gray-600 mt-1">{{ notification.content }}</p>
                                     <span class="text-sm text-gray-500 mt-2 block">{{ formatTime(notification.createdAt) }}</span>
                                 </div>
                                 <button @click="deleteNotification(notification.id)"

@@ -17,16 +17,9 @@
           <!-- OTP Input Fields -->
           <div class="flex justify-between gap-2">
             <div v-for="i in 6" :key="i">
-              <input
-                :ref="el => otpRefs[i-1] = el"
-                v-model="otpDigits[i-1]"
-                type="text"
-                maxlength="1"
+              <input :ref="el => otpRefs[i - 1] = el" v-model="otpDigits[i - 1]" type="text" maxlength="1"
                 class="w-12 h-12 text-center text-xl font-semibold border-2 rounded-md focus:border-blue-500 focus:ring-blue-500"
-                @input="handleOtpInput($event, i-1)"
-                @keydown="handleKeydown($event, i-1)"
-                @paste="handlePaste"
-              />
+                @input="handleOtpInput($event, i - 1)" @keydown="handleKeydown($event, i - 1)" @paste="handlePaste" />
             </div>
           </div>
 
@@ -37,16 +30,12 @@
 
           <!-- Submit Button -->
           <div>
-            <button
-              type="submit"
-              :disabled="isLoading || !isComplete"
-              :class="[
-                'w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white',
-                isLoading || !isComplete 
-                  ? 'bg-blue-300 cursor-not-allowed'
-                  : 'bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
-              ]"
-            >
+            <button type="submit" :disabled="isLoading || !isComplete" :class="[
+              'w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white',
+              isLoading || !isComplete
+                ? 'bg-blue-300 cursor-not-allowed'
+                : 'bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
+            ]">
               <span v-if="isLoading" class="flex items-center">
                 <Icon name="lucide:loader" class="animate-spin mr-2" />
                 Verifying...
@@ -59,12 +48,8 @@
           <div class="text-center">
             <p class="text-sm text-gray-600">
               Didn't receive the code?
-              <button
-                type="button"
-                :disabled="resendTimer > 0"
-                @click="resendCode"
-                class="font-medium text-blue-600 hover:text-blue-500 disabled:text-gray-400 disabled:cursor-not-allowed"
-              >
+              <button type="button" :disabled="resendTimer > 0" @click="resendCode"
+                class="font-medium text-blue-600 hover:text-blue-500 disabled:text-gray-400 disabled:cursor-not-allowed">
                 {{ resendTimer > 0 ? `Resend in ${resendTimer}s` : 'Resend code' }}
               </button>
             </p>
@@ -91,7 +76,7 @@ const isComplete = computed(() => {
 // Handle OTP input
 const handleOtpInput = (event, index) => {
   const value = event.target.value;
-  
+
   // Ensure only numbers are entered
   if (!/^\d*$/.test(value)) {
     otpDigits.value[index] = '';
@@ -120,7 +105,7 @@ const handlePaste = (event) => {
   event.preventDefault();
   const pastedData = event.clipboardData.getData('text');
   const numbers = pastedData.replace(/\D/g, '').slice(0, 6).split('');
-  
+
   numbers.forEach((num, index) => {
     if (index < 6) {
       otpDigits.value[index] = num;
@@ -136,17 +121,19 @@ const verifyOTP = async () => {
     const otp = otpDigits.value.join('');
 
     // Replace with your actual API call
-    await new Promise(resolve => setTimeout(resolve, 1500)); // Simulated API delay
-    
-    // Example API call:
-    // const response = await $fetch('/api/verify-email', {
-    //   method: 'POST',
-    //   body: { otp }
-    // });
+    await new Promise(resolve => setTimeout(resolve, 1500)); // Simulated API dela
 
-    // Simulate successful verification
-    navigateTo('/dashboard'); // Replace with your success route
+    const email = localStorage.getItem('Email-onSignup')
+    const response = await axios.post('https://watermark-distribution.onrender.com/api/user/verify-email', {
+      email,
+      otp
+    })
+
+    console.log(response);
+    toast.success('Verified')
+    navigateTo('/dashboard');
   } catch (err) {
+    toast.error(err.message)
     error.value = err.message || 'Invalid verification code. Please try again.';
   } finally {
     isLoading.value = false;
@@ -158,7 +145,7 @@ const resendCode = async () => {
   try {
     // Replace with your actual resend API call
     await new Promise(resolve => setTimeout(resolve, 1000)); // Simulated API delay
-    
+
     // Start resend timer
     resendTimer.value = 60;
     const timerInterval = setInterval(() => {
