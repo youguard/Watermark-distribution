@@ -11,7 +11,7 @@
                     </NuxtLink>
                     <div class="flex text-center items-center space-x-8">
 
-                        <NuxtLink to="/editor" class="flex flex-col items-center space-y-1 mx-auto ml-4">
+                        <NuxtLink to="/new" class="flex flex-col items-center space-y-1 mx-auto ml-4">
                             <Icon class="text-center" icon="proicons:pencil" width="1.5em" height="1.5em" />
                             <span class="text-xs font-semibold text-center hidden sm:block">Editor</span>
                         </NuxtLink>
