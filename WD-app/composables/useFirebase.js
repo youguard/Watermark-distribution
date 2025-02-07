@@ -1,5 +1,17 @@
-import { initializeApp } from 'firebase/app'
-import { getFirestore, collection, addDoc, getDocs, doc, getDoc, updateDoc } from 'firebase/firestore'
+import axios from 'axios';
+import { initializeApp } from 'firebase/app';
+import {
+    getFirestore,
+    collection,
+    addDoc,
+    getDocs,
+    doc,
+    getDoc,
+    updateDoc,
+    deleteDoc,
+    query,
+    where
+} from 'firebase/firestore';
 
 const firebaseConfig = {
     apiKey: "AIzaSyDDRskIYK_PeAJaUhevqzFo_ESdRrR6_uM",
@@ -9,64 +21,152 @@ const firebaseConfig = {
     messagingSenderId: "126772319506",
     appId: "1:126772319506:web:b4f92d813d0372bfc44fcb",
     measurementId: "G-BPCDWG7XWP"
-}
+};
 
-export const useFirebase = () => {
-    const app = initializeApp(firebaseConfig)
-    const db = getFirestore(app)
+// Initialize Firebase once
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-    const saveDraftToFirebase = async (draft) => {
+class UserService {
+    constructor() {
+        this.userDetails = null;
+    }
+
+    async getUserDetails() {
+        if (this.userDetails) {
+            return this.userDetails;
+        }
+
+        const token = localStorage.getItem("accessToken");
+        if (!token) {
+            throw new Error("No access token found");
+        }
+
         try {
-            const docRef = await addDoc(collection(db, 'drafts'), draft)
-            console.log('Document written with ID: ', docRef.id)
-            return docRef.id
-        } catch (e) {
-            console.error('Error adding document: ', e)
-            throw e
+            const response = await axios.get(
+                'https://watermark-distribution.onrender.com/api/user/details',
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+            this.userDetails = response.data.userDetails;
+            return this.userDetails;
+        } catch (error) {
+            console.error("Error fetching user details:", error);
+            throw error;
         }
     }
+}
+
+const userService = new UserService();
+
+export const useFirebase = () => {
+    const saveDraftToFirebase = async (draft) => {
+        try {
+            const userDetails = await userService.getUserDetails();
+            const draftWithEmail = {
+                ...draft,
+                email: userDetails.email,
+                createdAt: new Date().toISOString()
+            };
+
+            const docRef = await addDoc(collection(db, 'drafts'), draftWithEmail);
+            return docRef.id;
+        } catch (error) {
+            console.error('Error saving draft:', error);
+            throw error;
+        }
+    };
 
     const getDraftsFromFirebase = async () => {
-        const drafts = []
-        const querySnapshot = await getDocs(collection(db, 'drafts'))
-        querySnapshot.forEach((doc) => {
-            drafts.push({ id: doc.id, ...doc.data() })
-        })
-        return drafts
-    }
+        try {
+            const userDetails = await userService.getUserDetails();
+            const draftsRef = collection(db, "drafts");
+            const q = query(draftsRef, where("email", "==", userDetails.Email));
+
+            const querySnapshot = await getDocs(q);
+            return querySnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+        } catch (error) {
+            console.error("Error fetching drafts:", error);
+            throw error;
+        }
+    };
 
     const getDraftFromFirebase = async (id) => {
         try {
-            const docRef = doc(db, 'drafts', id)
-            const docSnap = await getDoc(docRef)
+            const docRef = doc(db, 'drafts', id);
+            const docSnap = await getDoc(docRef);
 
-            if (docSnap.exists()) {
-                return { id: docSnap.id, ...docSnap.data() }
-            } else {
-                console.log('No such document!')
-                return null
+            if (!docSnap.exists()) {
+                return null;
             }
-        } catch (e) {
-            console.error('Error getting document:', e)
-            throw e
+
+            return {
+                id: docSnap.id,
+                ...docSnap.data()
+            };
+        } catch (error) {
+            console.error('Error getting draft:', error);
+            throw error;
         }
-    }
+    };
 
     const updateDraftInFirebase = async (id, draft) => {
         try {
-            const docRef = doc(db, 'drafts', id)
-            await updateDoc(docRef, draft)
-            console.log('Document updated successfully')
-        } catch (e) {
-            console.error('Error updating document: ', e)
-            throw e
+            const docRef = doc(db, 'drafts', id);
+            const updatedDraft = {
+                ...draft,
+                updatedAt: new Date().toISOString()
+            };
+
+            await updateDoc(docRef, updatedDraft);
+            return true;
+        } catch (error) {
+            console.error('Error updating draft:', error);
+            throw error;
         }
-    }
+    };
+
+    // ... (previous imports and config remain the same)
+
+    const removeDraftFromFirebase = async (id) => {
+        try {
+            // Get the draft and log its details
+            const draft = await getDraftFromFirebase(id);
+            console.log("Found draft:", draft);
+
+            if (!draft) {
+                throw new Error('Draft not found');
+            }
+
+            // Get user details and log them
+            const userDetails = await userService.getUserDetails();
+            console.log("Current user email:", userDetails.Email);
+            console.log("Draft owner email:", draft.email);
+
+            if (draft.email !== userDetails.Email) {
+                throw new Error('Unauthorized to delete this draft');
+            }
+
+            const docRef = doc(db, 'drafts', id);
+            await deleteDoc(docRef);
+            return true;
+        } catch (error) {
+            console.error('Error in removeDraftFromFirebase:', error);
+            throw error;
+        }
+    };
 
     return {
         saveDraftToFirebase,
         getDraftsFromFirebase,
         getDraftFromFirebase,
-        updateDraftInFirebase
-    }
-}
+        updateDraftInFirebase,
+        removeDraftFromFirebase
+    };
+};

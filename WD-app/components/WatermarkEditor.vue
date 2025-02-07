@@ -144,12 +144,18 @@
       </div>
       <div v-else class="grid grid-cols-1 gap-6">
         <div v-for="draft in drafts" :key="draft.id"
-          class="border rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow">
+          class="border rounded-lg p-2 shadow-md hover:shadow-lg transition-shadow">
           <img :src="draft.baseImage" alt="Draft preview" class="w-full h-48 object-cover mb-4 rounded">
-          <NuxtLink :to="`/edit/${draft.id}`" class="inline-block flex items-center text-violet-600">
-            <Icon icon="mdi:pencil" class="mr-2" />
-            Edit Draft
-          </NuxtLink>
+          <div class="flex items-center justify-between w-full">
+            <NuxtLink :to="`/edit/${draft.id}`" class="inline-block flex items-center text-violet-600">
+              <Icon icon="mdi:pencil" class="mr-2" />
+              Edit Draft
+            </NuxtLink>
+
+            <button @click="deleteDraft(draft.id)" class="text-red-600 p-4 rounded">
+              <Icon icon="material-symbols:delete-outline-rounded" width="1.5em" height="1.5em" />
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -158,14 +164,17 @@
 
 <script setup>
 import { Icon } from '@iconify/vue/dist/iconify.js'
+import axios from 'axios'
 import { ref, reactive, onMounted, onUnmounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { toast } from 'vue3-toastify'
 import { useFirebase } from '~/composables/useFirebase'
+
 
 
 const route = useRoute()
 const router = useRouter()
-const { saveDraftToFirebase, getDraftFromFirebase, updateDraftInFirebase } = useFirebase()
+const { saveDraftToFirebase, getDraftFromFirebase, updateDraftInFirebase, removeDraftFromFirebase } = useFirebase()
 
 const draftId = computed(() => route.params.id)
 const isNewEdit = computed(() => !draftId.value)
@@ -295,6 +304,30 @@ const stopDragging = () => {
   isDragging.value = false
 }
 
+const userDetails = ref({})
+
+
+const fetchUserDetails = async () => {
+  try {
+    const token = localStorage.getItem("accessToken")
+    const response = await axios.get('https://watermark-distribution.onrender.com/api/user/details',
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+    userDetails.value = response.data.userDetails;
+    console.log("User details", userDetails);
+
+  } catch (err) {
+    console.error(err);
+
+  }
+}
+
+onMounted(fetchUserDetails)
+
 const saveDraft = async () => {
   const draft = {
     baseImage: baseImage.value.src,
@@ -302,7 +335,8 @@ const saveDraft = async () => {
     watermarkText: watermarkText.value,
     watermarkImage: watermarkImage.value,
     watermarkPosition,
-    textStyle
+    textStyle,
+    email: userDetails.value.email
   }
 
   try {
@@ -318,6 +352,24 @@ const saveDraft = async () => {
     alert('Error saving draft. Please try again.')
   }
 }
+
+const deleteDraft = async (id) => {
+  try {
+    const success = await removeDraftFromFirebase(id);
+    if (success) {
+      toast.success("Draft deleted successfully");
+    }
+  } catch (error) {
+    console.error("Error deleting draft:", error);
+    if (error.message === 'Draft not found') {
+      toast.error("Draft not found");
+    } else if (error.message === 'Unauthorized to delete this draft') {
+      toast.error("You don't have permission to delete this draft");
+    } else {
+      toast.error("Error deleting draft");
+    }
+  }
+};
 
 const downloadImage = () => {
   // Create a new canvas to avoid modifying the original
@@ -372,7 +424,7 @@ const error = ref(null)
 
 onMounted(async () => {
   try {
-    drafts.value = await getDraftsFromFirebase()
+    drafts.value = await getDraftsFromFirebase(userDetails.Email)
   } catch (e) {
     console.error('Error fetching drafts:', e)
     error.value = e
