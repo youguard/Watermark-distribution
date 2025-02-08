@@ -29,9 +29,7 @@
                             transform: 'translate(-50%, -50%)',
                         }" class="absolute w-24 h-24 object-contain select-none pointer-events-none" />
                     <div v-if="!baseImage" class="absolute inset-0 flex items-center justify-center">
-                        <input id="watermark-upload" type="file" accept="image/*" @change="handleWatermarkImageUpload"
-                        class="w-full p-2 border rounded hidden" />
-                        <label for="watermark-upload" class="cursor-pointer text-center text-gray-500">
+                        <div class="text-center text-gray-500">
                             <!-- <LucideUpload size="48" class="mx-auto mb-2" /> -->
                             <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto text-center" width="4.5em"
                                 height="4.5em" viewBox="0 0 24 24">
@@ -40,19 +38,32 @@
                                     clip-rule="evenodd" />
                             </svg>
                             <p>Upload an image to begin</p>
-                        </label>
+                        </div>
                     </div>
                     <input type="file" accept="image/*" @change="handleBaseImageUpload" ref="fileInput" class="hidden" />
                 </div>
+                <img v-else-if="watermarkType === 'image' && watermarkImage" ref="imageWatermark" :src="watermarkImage"
+                    :style="{
+                        position: 'absolute',
+                        left: `${watermarkPosition.x}px`,
+                        top: `${watermarkPosition.y}px`,
+                        width: '100px',
+                        cursor: 'move',
+                        userSelect: 'none'
+                    }" @mousedown="startDragging" @touchstart="startDragging">
             </div>
-            <div v-if="baseImage" class="mt-2 text-sm text-gray-500 text-center">
-                Position: X: {{ position.x.toFixed(1) }}%, Y: {{ position.y.toFixed(1) }}%
-            </div>
-            <div class="mt-4 flex flex-col text-center items-center justify-between">
-                <div class="text-gray-500 flex items-center gap-2">
-                    <!-- <LucideMove size="20" /> -->
-                    <span class="text-xs md:text-md">Click and drag or use arrow buttons to position the
-                        watermark</span>
+
+            <div class="">
+                <!-- Image Upload -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Upload Image</label>
+                    <input type="file" @change="handleImageUpload" accept="image/*" class="block w-full text-sm text-gray-500
+          file:mr-4 file:py-2 file:px-4
+          file:rounded-full file:border-0
+          file:text-sm file:font-semibold
+          file:bg-violet-50 file:text-violet-700
+          hover:file:bg-violet-100
+        " />
                 </div>
             </div>
             <div class="flex w-full items-center justify-between mt-2">
@@ -84,221 +95,261 @@
                     </button>
                 </div>
                 <div class="flex gap-4">
-                    <div class="flex-1">
+                    <!-- <div class="flex-1">
                         <label class="block text-sm font-medium mb-2">Upload Base Image</label>
                         <input type="file" accept="image/*" @change="handleBaseImageUpload"
                             class="w-full p-2 border rounded" />
-                    </div>
+                    </div> -->
                     <div v-if="watermarkType === 'image'" class="flex-1">
                         <label class="block text-sm font-medium mb-2">Upload Watermark Image</label>
-                        <input id="watermark-upload" type="file" accept="image/*" @change="handleWatermarkImageUpload"
+                        <input type="file" accept="image/*" @change="handleWatermarkImageUpload"
                             class="w-full p-2 border rounded" />
                     </div>
                 </div>
-                <div v-if="watermarkType === 'text'" class="space-y-4">
-                    <input type="text" v-model="watermarkText" class="w-full p-2 border rounded"
-                        placeholder="Enter watermark text" />
-                    <div class="grid grid-cols-2 gap-4">
+
+                <!-- Text Watermark Options -->
+                <div v-if="watermarkType === 'text'" class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Watermark Text</label>
+                    <input v-model="watermarkText" type="text"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-violet-300 focus:ring focus:ring-violet-200 focus:ring-opacity-50"
+                        placeholder="Enter watermark text">
+
+                    <!-- Text Styling Options -->
+                    <div class="mt-4 grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium mb-2">Font Size</label>
-                            <input type="number" v-model.number="textStyle.fontSize" class="w-full p-2 border rounded"
-                                min="8" max="72" />
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Font Size</label>
+                            <input v-model="textStyle.fontSize" type="number"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-violet-300 focus:ring focus:ring-violet-200 focus:ring-opacity-50"
+                                min="8" max="72">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium mb-2">Color</label>
-                            <input type="color" v-model="textStyle.color" class="w-full h-10 border rounded" />
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Font Color</label>
+                            <input v-model="textStyle.color" type="color"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-violet-300 focus:ring focus:ring-violet-200 focus:ring-opacity-50">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Font Weight</label>
+                            <select v-model="textStyle.fontWeight"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-violet-300 focus:ring focus:ring-violet-200 focus:ring-opacity-50">
+                                <option value="normal">Normal</option>
+                                <option value="bold">Bold</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Font Style</label>
+                            <select v-model="textStyle.fontStyle"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-violet-300 focus:ring focus:ring-violet-200 focus:ring-opacity-50">
+                                <option value="normal">Normal</option>
+                                <option value="italic">Italic</option>
+                            </select>
                         </div>
                     </div>
-                    <div class="flex gap-4">
-                        <button @click="textStyle.isBold = !textStyle.isBold"
-                            :class="`px-4 py-2 rounded ${textStyle.isBold ? 'bg-blue-500 text-white' : 'bg-gray-200'}`">
-                            Bold
-                        </button>
-                        <button @click="textStyle.isItalic = !textStyle.isItalic"
-                            :class="`px-4 py-2 rounded ${textStyle.isItalic ? 'bg-blue-500 text-white' : 'bg-gray-200'}`">
-                            Italic
-                        </button>
-                    </div>
+                </div>
+
+                <!-- Image Watermark Options -->
+                <div v-if="watermarkType === 'image'" class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Upload Watermark Image</label>
+                    <input type="file" @change="handleWatermarkImageUpload" accept="image/*" class="block w-full text-sm text-gray-500
+          file:mr-4 file:py-2 file:px-4
+          file:rounded-full file:border-0
+          file:text-sm file:font-semibold
+          file:bg-violet-50 file:text-violet-700
+          hover:file:bg-violet-100
+        " />
                 </div>
             </div>
         </div>
 
-        <div v-else class="flex flex-col items-center justify-center h-[80vh]">
-            <Icon icon="solar:sad-circle-broken" width="5.5em" height="5.5em" />
-            <p class="text-gray-500 text-center mt-2">Admin hasn't approved you yet.</p>
+
+
+
+
+
+
+
+        <!-- Action Buttons -->
+        <div class="flex space-x-4">
+            <button @click="saveDraft"
+                class="px-4 py-2 flex items-center bg-violet-600 text-white rounded-md hover:bg-violet-700 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2">
+                <Icon icon="mdi:content-save" class="mr-2" />
+                Save Draft
+            </button>
+            <button @click="downloadImage"
+                class="px-4 py-2 flex items-center bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                <Icon icon="mdi:download" class="mr-2" />
+                Download
+            </button>
         </div>
     </div>
 </template>
 
-<script>
-import { Icon } from '@iconify/vue/dist/iconify.js';
-import axios from 'axios';
+<script setup>
+import { Icon } from '@iconify/vue/dist/iconify.js'
+import { ref, reactive, onMounted, onUnmounted } from 'vue'
+import { toast } from 'vue3-toastify'
+import { useFirebase } from '~/composables/useFirebase'
 
 
+const { saveDraftToFirebase } = useFirebase()
 
-export default {
-    components: {
-        Icon,
-    },
-    data() {
-        return {
-            baseImage: null,
-            watermarkType: 'text',
-            watermarkText: 'Your Watermark',
-            watermarkImage: null,
-            position: { x: 50, y: 50 },
-            isDragging: false,
-            textStyle: {
-                fontSize: 24,
-                color: '#000000',
-                fontFamily: 'Arial',
-                isBold: false,
-                isItalic: false,
-            },
-            userDetails: {},
-        };
-    },
-    methods: {
-        triggerFileUpload() {
-            this.$refs.fileInput.click();
-        },
-        async fetchUserDetails() {
-            try {
-                const token = localStorage.getItem("accessToken")
-                const response = await axios.get('https://watermark-distribution.onrender.com/api/user/details',
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`
-                        }
-                    }
-                );
-                this.userDetails = response.data.userDetails;
-                console.log("User details", userDetails);
+const canvas = ref(null)
+const ctx = ref(null)
+const baseImage = ref(null)
+const watermarkType = ref('text')
+const watermarkText = ref('Watermark')
+const watermarkImage = ref(null)
+const watermarkPosition = reactive({ x: 50, y: 50 })
+const isDragging = ref(false)
+const dragOffset = reactive({ x: 0, y: 0 })
+const textStyle = reactive({
+  fontSize: 24,
+  color: '#000000',
+  fontWeight: 'normal',
+  fontStyle: 'normal'
+})
 
-            } catch (err) {
-                console.error(err);
+const textWatermark = ref(null)
+const imageWatermark = ref(null)
 
+onMounted(() => {
+    ctx.value = canvas.value.getContext('2d')
+    window.addEventListener('mousemove', drag)
+    window.addEventListener('mouseup', stopDragging)
+    window.addEventListener('touchmove', drag)
+    window.addEventListener('touchend', stopDragging)
+})
+
+onUnmounted(() => {
+    window.removeEventListener('mousemove', drag)
+    window.removeEventListener('mouseup', stopDragging)
+    window.removeEventListener('touchmove', drag)
+    window.removeEventListener('touchend', stopDragging)
+})
+
+const handleImageUpload = (event) => {
+    const file = event.target.files[0]
+    if (file) {
+        const reader = new FileReader()
+        reader.onload = (e) => {
+            baseImage.value = new Image()
+            baseImage.value.onload = () => {
+                drawImage()
             }
-        },
-        handleBaseImageUpload(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => (this.baseImage = e.target.result);
-                reader.readAsDataURL(file);
-            }
-        },
-        handleWatermarkImageUpload(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (e) => (this.watermarkImage = e.target.result);
-                reader.readAsDataURL(file);
-            }
-        },
-        handleMouseDown(e) {
-            if (!this.baseImage) return;
-            const container = this.$refs.containerRef.getBoundingClientRect();
-            const x = ((e.clientX - container.left) / container.width) * 100;
-            const y = ((e.clientY - container.top) / container.height) * 100;
-            this.position = { x, y };
-            this.isDragging = true;
-        },
-        handleMouseMove(e) {
-            if (!this.isDragging || !this.baseImage) return;
-            const container = this.$refs.containerRef.getBoundingClientRect();
-            const x = ((e.clientX - container.left) / container.width) * 100;
-            const y = ((e.clientY - container.top) / container.height) * 100;
-            this.position = {
-                x: Math.max(0, Math.min(100, x)),
-                y: Math.max(0, Math.min(100, y)),
-            };
-        },
-        handleMouseUp() {
-            this.isDragging = false;
-        },
-        handleNudge(direction) {
-            const nudgeAmount = 1; // 1% of the container size
-            this.position = {
-                ...this.position,
-                x: direction === 'left' ? Math.max(0, this.position.x - nudgeAmount) : direction === 'right' ? Math.min(100, this.position.x + nudgeAmount) : this.position.x,
-                y: direction === 'up' ? Math.max(0, this.position.y - nudgeAmount) : direction === 'down' ? Math.min(100, this.position.y + nudgeAmount) : this.position.y,
-            };
-        },
-        async handleDownload() {
-            if (!this.baseImage) return;
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            const baseImg = new Image();
-            baseImg.crossOrigin = 'anonymous';
-            const loadBaseImage = new Promise((resolve) => {
-                baseImg.onload = () => {
-                    canvas.width = baseImg.width;
-                    canvas.height = baseImg.height;
-                    ctx.drawImage(baseImg, 0, 0);
-                    resolve();
-                };
-            });
-            baseImg.src = this.baseImage;
-            await loadBaseImage;
-            const addTextWatermark = () => {
-                ctx.fillStyle = this.textStyle.color;
-                let font = `${this.textStyle.isBold ? 'bold ' : ''}${this.textStyle.isItalic ? 'italic ' : ''}${this.textStyle.fontSize}px ${this.textStyle.fontFamily}`;
-                ctx.font = font;
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                const x = (this.position.x / 100) * canvas.width;
-                const y = (this.position.y / 100) * canvas.height;
-                ctx.fillText(this.watermarkText, x, y);
-            };
-            const addImageWatermark = () => {
-                return new Promise((resolve) => {
-                    if (this.watermarkImage) {
-                        const watermarkImg = new Image();
-                        watermarkImg.crossOrigin = 'anonymous';
-                        watermarkImg.onload = () => {
-                            const watermarkWidth = Math.min(canvas.width * 0.3, 300);
-                            const aspectRatio = watermarkImg.height / watermarkImg.width;
-                            const watermarkHeight = watermarkWidth * aspectRatio;
-                            const x = ((this.position.x / 100) * canvas.width) - (watermarkWidth / 2);
-                            const y = ((this.position.y / 100) * canvas.height) - (watermarkHeight / 2);
-                            ctx.drawImage(watermarkImg, x, y, watermarkWidth, watermarkHeight);
-                            resolve();
-                        };
-                        watermarkImg.src = this.watermarkImage;
-                    } else {
-                        resolve();
-                    }
-                });
-            };
-            try {
-                if (this.watermarkType === 'text') {
-                    addTextWatermark();
-                } else if (this.watermarkType === 'image') {
-                    await addImageWatermark();
-                }
-                const link = document.createElement('a');
-                link.download = 'watermarked-image.png';
-                link.href = canvas.toDataURL('image/png', 1.0);
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            } catch (error) {
-                console.error('Error creating watermarked image:', error);
-                alert('There was an error creating the watermarked image. Please try again.');
-            }
-        },
-        setWatermarkType(type) {
-            this.watermarkType = type;
-        },
-    },
-
-    mounted() {
-        this.fetchUserDetails()
+            baseImage.value.src = e.target.result
+        }
+        reader.readAsDataURL(file)
     }
-};
+}
+
+const handleWatermarkImageUpload = (event) => {
+    const file = event.target.files[0]
+    if (file) {
+        const reader = new FileReader()
+        reader.onload = (e) => {
+            watermarkImage.value = e.target.result
+        }
+        reader.readAsDataURL(file)
+    }
+}
+
+const drawImage = () => {
+    if (baseImage.value) {
+        canvas.value.width = baseImage.value.width
+        canvas.value.height = baseImage.value.height
+        ctx.value.clearRect(0, 0, canvas.value.width, canvas.value.height)
+        ctx.value.drawImage(baseImage.value, 0, 0)
+    }
+}
+
+// const startDragging = (event) => {
+//     isDragging.value = true
+//     dragOffset.x = event.clientX - watermarkPosition.x
+//     dragOffset.y = event.clientY - watermarkPosition.y
+// }
+
+// const drag = (event) => {
+//     if (isDragging.value) {
+//         watermarkPosition.x = event.clientX - dragOffset.x
+//         watermarkPosition.y = event.clientY - dragOffset.y
+//     }
+// }
+
+// const stopDragging = () => {
+//     isDragging.value = false
+// }
+
+
+const startDragging = (event) => {
+    isDragging.value = true
+    const clientX = event.clientX || event.touches[0].clientX
+    const clientY = event.clientY || event.touches[0].clientY
+    const rect = event.target.getBoundingClientRect()
+    dragOffset.x = clientX - rect.left
+    dragOffset.y = clientY - rect.top
+}
+
+const drag = (event) => {
+    if (isDragging.value) {
+        event.preventDefault()
+        const clientX = event.clientX || event.touches[0].clientX
+        const clientY = event.clientY || event.touches[0].clientY
+        const canvasRect = canvas.value.getBoundingClientRect()
+
+        watermarkPosition.x = Math.min(
+            Math.max(clientX - canvasRect.left - dragOffset.x, 0),
+            canvasRect.width - (watermarkType.value === 'image' ? 100 : 0)
+        )
+        watermarkPosition.y = Math.min(
+            Math.max(clientY - canvasRect.top - dragOffset.y, 0),
+            canvasRect.height - (watermarkType.value === 'image' ? 100 : 0)
+        )
+    }
+}
+
+const stopDragging = () => {
+    isDragging.value = false
+}
+
+const saveDraft = async () => {
+    const draft = {
+        baseImage: baseImage.value.src,
+        watermarkType: watermarkType.value,
+        watermarkText: watermarkText.value,
+        watermarkImage: watermarkImage.value,
+        watermarkPosition,
+        textStyle
+    }
+    await saveDraftToFirebase(draft)
+    alert('Draft saved successfully!')
+    toast.success('Draft saved successfully!')
+}
+
+const downloadImage = () => {
+    drawImage()
+    if (watermarkType.value === 'text') {
+        ctx.value.font = `${textStyle.fontStyle} ${textStyle.fontWeight} ${textStyle.fontSize}px Arial`
+        ctx.value.fillStyle = textStyle.color
+        ctx.value.fillText(watermarkText.value, watermarkPosition.x, watermarkPosition.y)
+    } else if (watermarkType.value === 'image' && watermarkImage.value) {
+        const img = new Image()
+        img.onload = () => {
+            ctx.value.drawImage(img, watermarkPosition.x, watermarkPosition.y, 100, 100)
+            const link = document.createElement('a')
+            link.download = 'watermarked-image.png'
+            link.href = canvas.value.toDataURL()
+            link.click()
+        }
+        img.src = watermarkImage.value
+    }
+}
 </script>
 
-<style scoped>
-/* Add your styles here */
+<style>
+input {
+    padding: 10px;
+}
+
+select {
+    padding: 10px;
+}
 </style>

@@ -1,7 +1,7 @@
 <template>
     <main>
         <nav class="bg-white/70 backdrop-blur-md border-b border-gray-100">
-            <div class="max-w-5xl mx-auto px-4">
+            <div class="max-w-6xl mx-auto px-4">
                 <div class="flex justify-between h-16">
                     <NuxtLink to="/dashboard" class="flex items-center">
                         <Icon icon="material-symbols:water-drop-outline-rounded" width="1.5em" height="1.5em"
@@ -11,7 +11,7 @@
                     </NuxtLink>
                     <div class="flex text-center items-center space-x-8">
 
-                        <NuxtLink to="/editor" class="flex flex-col items-center space-y-1 mx-auto ml-4">
+                        <NuxtLink to="/new" class="flex flex-col items-center space-y-1 mx-auto ml-4">
                             <Icon class="text-center" icon="proicons:pencil" width="1.5em" height="1.5em" />
                             <span class="text-xs font-semibold text-center hidden sm:block">Editor</span>
                         </NuxtLink>
