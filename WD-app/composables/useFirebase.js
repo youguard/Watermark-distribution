@@ -65,10 +65,8 @@ const userService = new UserService();
 export const useFirebase = () => {
     const saveDraftToFirebase = async (draft) => {
         try {
-            const userDetails = await userService.getUserDetails();
             const draftWithEmail = {
                 ...draft,
-                email: userDetails.email,
                 createdAt: new Date().toISOString()
             };
 
@@ -131,8 +129,6 @@ export const useFirebase = () => {
             throw error;
         }
     };
-
-    // ... (previous imports and config remain the same)
 
     const removeDraftFromFirebase = async (id) => {
         try {

@@ -1,5 +1,8 @@
 <template>
-    <WatermarkEditor />
+    <main>
+        <Header />
+        <WatermarkEditor />
+    </main>
 </template>
 
 <script setup>

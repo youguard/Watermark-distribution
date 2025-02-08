@@ -329,6 +329,9 @@ const fetchUserDetails = async () => {
 onMounted(fetchUserDetails)
 
 const saveDraft = async () => {
+  const user = await userService.getUserDetails()
+  console.log(user.Email);
+  
   const draft = {
     baseImage: baseImage.value.src,
     watermarkType: watermarkType.value,
@@ -336,7 +339,7 @@ const saveDraft = async () => {
     watermarkImage: watermarkImage.value,
     watermarkPosition,
     textStyle,
-    email: userDetails.value.email
+    email: user.Email
   }
 
   try {
@@ -346,10 +349,10 @@ const saveDraft = async () => {
     } else {
       await updateDraftInFirebase(draftId.value, draft)
     }
-    alert(isNewEdit.value ? 'Draft saved successfully!' : 'Draft updated successfully!')
+    toast.success(isNewEdit.value ? 'Draft saved successfully!' : 'Draft updated successfully!')
   } catch (error) {
     console.error('Error saving draft:', error)
-    alert('Error saving draft. Please try again.')
+    toast.error('Error saving draft. Please try again.')
   }
 }
 
