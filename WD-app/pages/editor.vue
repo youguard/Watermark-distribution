@@ -29,7 +29,9 @@
                             transform: 'translate(-50%, -50%)',
                         }" class="absolute w-24 h-24 object-contain select-none pointer-events-none" />
                     <div v-if="!baseImage" class="absolute inset-0 flex items-center justify-center">
-                        <div class="text-center text-gray-500">
+                        <input id="watermark-upload" type="file" accept="image/*" @change="handleWatermarkImageUpload"
+                        class="w-full p-2 border rounded hidden" />
+                        <label for="watermark-upload" class="cursor-pointer text-center text-gray-500">
                             <!-- <LucideUpload size="48" class="mx-auto mb-2" /> -->
                             <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto text-center" width="4.5em"
                                 height="4.5em" viewBox="0 0 24 24">
@@ -38,7 +40,7 @@
                                     clip-rule="evenodd" />
                             </svg>
                             <p>Upload an image to begin</p>
-                        </div>
+                        </label>
                     </div>
                     <input type="file" accept="image/*" @change="handleBaseImageUpload" ref="fileInput" class="hidden" />
                 </div>
@@ -82,14 +84,14 @@
                     </button>
                 </div>
                 <div class="flex gap-4">
-                    <!-- <div class="flex-1">
+                    <div class="flex-1">
                         <label class="block text-sm font-medium mb-2">Upload Base Image</label>
                         <input type="file" accept="image/*" @change="handleBaseImageUpload"
                             class="w-full p-2 border rounded" />
-                    </div> -->
+                    </div>
                     <div v-if="watermarkType === 'image'" class="flex-1">
                         <label class="block text-sm font-medium mb-2">Upload Watermark Image</label>
-                        <input type="file" accept="image/*" @change="handleWatermarkImageUpload"
+                        <input id="watermark-upload" type="file" accept="image/*" @change="handleWatermarkImageUpload"
                             class="w-full p-2 border rounded" />
                     </div>
                 </div>
