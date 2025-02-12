@@ -38,9 +38,9 @@ app.use('/api', regionRoutes)
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-app.use('/', (req, res) => {
-    res.status(200).json('Welcome to Watermark Distribution Center')
-})
+// app.use('/', (req, res) => {
+//     res.status(200).json('Welcome to Watermark Distribution Center')
+// })
 
 const port = process.env.PORT || 3000
 app.listen(port, () => {
