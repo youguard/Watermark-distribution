@@ -75,7 +75,7 @@ const userDetails = ref({})
 const fetchUserDetails = async () => {
     try {
         const token = localStorage.getItem("accessToken")
-        const response = await axios.get('http://localhost:5000/api/user/details',
+        const response = await axios.get('/api/user/details',
             {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -113,7 +113,7 @@ softwares.value.sort((a, b) => new Date(b.releaseDate) - new Date(a.releaseDate)
 const fetchAllSoftwares = async () => {
     try {
         const token = localStorage.getItem("accessToken")
-        const response = await axios.get('http://localhost:5000/api/softwares', {
+        const response = await axios.get('/api/softwares', {
 
             headers: {
                 Authorization: `Bearer ${token}`
@@ -138,7 +138,7 @@ const fetchVersions = async () => {
     }
     try {
         const response = await axios.get(
-            'http://localhost:5000/api/softwares',
+            '/api/softwares',
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -176,7 +176,7 @@ const fetchVersions = async () => {
 const fetchAllNotifications = async () => {
     const token = localStorage.getItem('accessToken');
     try {
-        const response = await axios.get('http://localhost:5000/api/notifications', {
+        const response = await axios.get('/api/notifications', {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -193,7 +193,7 @@ const downloadSoftware = async () => {
     const token = localStorage.getItem("accessToken");
     try {
         const data = await axios.get(
-            `http://localhost:5000/api/softwares/download/${softwareId.value}`,
+            `/api/softwares/download/${softwareId.value}`,
             {
                 headers: {
                     Authorization: `Bearer ${token}`,

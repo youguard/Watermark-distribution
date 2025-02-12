@@ -261,7 +261,7 @@ const handleProfileUpdate = async () => {
         setIsSubmitting(true)
         const token = localStorage.getItem('accessToken')
 
-        await axios.put('http://localhost:5000/api/admin/change-name',
+        await axios.put('/api/admin/change-name',
             { name: profileForm.value.name },
             {
                 headers: {
@@ -294,7 +294,7 @@ const handlePasswordChange = async () => {
         isSubmitting.value = true
         const token = localStorage.getItem('accessToken')
 
-        await axios.put('http://localhost:5000/api/admin/change-password',
+        await axios.put('/api/admin/change-password',
             {
 
                 password: passwordForm.value.currentPassword,
@@ -332,7 +332,7 @@ const fetchUserDetails = async () => {
             return
         }
 
-        const response = await axios.get('http://localhost:5000/api/admin/details', {
+        const response = await axios.get('/api/admin/details', {
             headers: {
                 Authorization: `Bearer ${token}`,
             },

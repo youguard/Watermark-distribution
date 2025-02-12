@@ -170,7 +170,7 @@ export default {
         async login() {
             try {
                 this.isLoading = true;
-                const response = await axios.post('http://localhost:5000/api/user/login', {
+                const response = await axios.post('/api/user/login', {
                     usernameOrEmail: this.email,
                     password: this.password
                 });

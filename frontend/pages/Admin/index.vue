@@ -211,7 +211,7 @@ const createRegion = async () => {
     const input = newRegionName.value.trim();
     const token = localStorage.getItem("accessToken")
     try {
-        const response = await axios.post('http://localhost:5000/api/regions/new',
+        const response = await axios.post('/api/regions/new',
             {
                 region: input
             },
@@ -239,7 +239,7 @@ const allRegions = ref([])
 const fetchAllRegions = async () => {
     const token = localStorage.getItem('accessToken');
     try {
-        const response = await axios.get('http://localhost:5000/api/regions',
+        const response = await axios.get('/api/regions',
             {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -263,7 +263,7 @@ const saveAnnouncement = async () => {
             content: announcementContent.value,
         };
         const response = await axios.post(
-            'http://localhost:5000/api/notifications/new',
+            '/api/notifications/new',
             requestBody,
             {
                 headers: {
@@ -288,7 +288,7 @@ const fetchRegionNames = async () => {
     try {
         const token = localStorage.getItem('accessToken');
         const response = await axios.get(
-            'http://localhost:5000/api/regions',
+            '/api/regions',
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -313,7 +313,7 @@ const fetchUsers = async () => {
     try {
         const token = localStorage.getItem('accessToken');
         const response = await axios.get(
-            'http://localhost:5000/api/users',
+            '/api/users',
             {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -385,7 +385,7 @@ const deleteRegion = async () => {
     isDeleting.value = true
     const token = localStorage.getItem('accessToken');
     try {
-        await axios.delete(`http://localhost:5000/api/regions/${regionToDelete.value}`, {
+        await axios.delete(`/api/regions/${regionToDelete.value}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },

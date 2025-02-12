@@ -183,7 +183,7 @@ export default {
         async signup() {
             try {
                 this.isLoading = true;
-                const response = await axios.post('http://localhost:5000/api/user/signup', {
+                const response = await axios.post('/api/user/signup', {
                     fullName: this.fullname,
                     username: this.username,
                     email: this.email,
@@ -206,7 +206,7 @@ export default {
 
         async fetchRegions() {
             try {
-                const response = await axios.get('http://localhost:5000/api/regions'); // Replace with your API endpoint
+                const response = await axios.get('/api/regions'); // Replace with your API endpoint
                 const data = await response.data;
                 this.regions = data.regions || []; // Assuming API response has a `regions` array
                 console.log("Regions", data.regions);

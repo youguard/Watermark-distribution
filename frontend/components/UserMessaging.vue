@@ -68,7 +68,7 @@ const fetchMessages = async (id) => {
     try {
         console.log("UserIDD", id)
         const data = await axios.get(
-            `http://localhost:5000/api/messages/${id}`,
+            `/api/messages/${id}`,
             {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("accessToken")}`, // Use token for protected endpoint
@@ -119,7 +119,7 @@ const sendMessage = async () => {
 
         // Make the API request with the token in the headers
         await axios.post(
-            `http://localhost:5000/api/messages/${userDetails.value}`,
+            `/api/messages/${userDetails.value}`,
             { content: messageContent },
             {
                 headers: {
@@ -141,7 +141,7 @@ const userDetails = ref({})
 const fetchUserDetails = async () => {
     try {
         const token = localStorage.getItem("accessToken")
-        const response = await axios.get('http://localhost:5000/api/user/details',
+        const response = await axios.get('/api/user/details',
             {
                 headers: {
                     Authorization: `Bearer ${token}`

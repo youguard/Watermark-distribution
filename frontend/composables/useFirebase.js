@@ -44,7 +44,7 @@ class UserService {
 
         try {
             const response = await axios.get(
-                'http://localhost:5000/api/user/details',
+                '/api/user/details',
                 {
                     headers: {
                         Authorization: `Bearer ${token}`

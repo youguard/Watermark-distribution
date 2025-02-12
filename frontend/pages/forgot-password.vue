@@ -55,7 +55,7 @@ const submitEmail = async () => {
 
     try {
         const response = await axios.post(
-            "http://localhost:5000/api/user/forgot-password",
+            "/api/user/forgot-password",
             { email: email.value },
             {
                 headers: {

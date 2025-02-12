@@ -181,7 +181,7 @@ const confirmDelete = async () => {
     if (selectedUser.value) {
         try {
             const token = localStorage.getItem("accessToken");
-            await axios.delete(`http://localhost:5000/api/users/${selectedUser.value.id}`, {
+            await axios.delete(`/api/users/${selectedUser.value.id}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             toast.success(`User ${selectedUser.value.name} deleted successfully`);
@@ -212,7 +212,7 @@ const users = ref([]);
 const fetchUsers = async () => {
     try {
         const token = localStorage.getItem('accessToken');
-        const response = await axios.get('http://localhost:5000/api/users', {
+        const response = await axios.get('/api/users', {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -243,7 +243,7 @@ const regionsMap = ref({});
 const fetchRegions = async () => {
     try {
         const token = localStorage.getItem('accessToken');
-        const response = await axios.get('http://localhost:5000/api/regions', {
+        const response = await axios.get('/api/regions', {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -335,7 +335,7 @@ const toggleApproval = async (user) => {
         console.log("Sattus", updatedStatus, token)
 
         const response = await axios.patch(
-            `http://localhost:5000/api/users/${id}/approve`,
+            `/api/users/${id}/approve`,
             {},
             {
                 headers: {
@@ -361,7 +361,7 @@ const toggleApproval = async (user) => {
 //     if (confirm(`Are you sure you want to delete user ${user.name}?`)) {
 //         try {
 //             const token = localStorage.getItem('accessToken');
-//             await axios.delete(`http://localhost:5000/api/users/${user.id}/approve`, {
+//             await axios.delete(`/api/users/${user.id}/approve`, {
 //                 headers: {
 //                     Authorization: `Bearer ${token}`,
 //                 },

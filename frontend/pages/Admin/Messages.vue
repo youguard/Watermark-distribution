@@ -177,7 +177,7 @@ const fetchMessages = async () => {
     }
 
     const data = await axios.get(
-      "http://localhost:5000/api/messages",
+      "/api/messages",
       { headers: { Authorization: `Bearer ${token}` } }
     );
 
@@ -218,7 +218,7 @@ const fetchMessages = async () => {
 const fetchUserName = async (id) => {
   try {
     const data = await axios.get(
-      `http://localhost:5000/api/users/${id}`
+      `/api/users/${id}`
     );
     console.log("chat user:", data.data);
 
@@ -245,7 +245,7 @@ const selectUser = async (user, name) => {
   console.log("One user:", user);
   try {
     const data = await axios.get(
-      `http://localhost:5000/api/messages/${user._id}`,
+      `/api/messages/${user._id}`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
@@ -266,7 +266,7 @@ const sendMessage = async () => {
     const token = localStorage.getItem("accessToken");
 
     await axios.post(
-      `http://localhost:5000/api/messages/${selectedUserId.value}`,
+      `/api/messages/${selectedUserId.value}`,
       { content: newMessage.value },
       { headers: { Authorization: `Bearer ${token}` } }
     );
@@ -284,7 +284,7 @@ const sendMessage = async () => {
 // const fetchUserMessages = async (id) => {
 //     try {
 //         const { data } = await axios.get(
-//             `http://localhost:5000/api/messages/${id}`,
+//             `/api/messages/${id}`,
 //             {
 //                 headers: {
 //                     Authorization: `Bearer ${localStorage.getItem("accessToken")}`, // Use token for protected endpoint

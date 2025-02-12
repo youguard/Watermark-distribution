@@ -117,7 +117,7 @@ const fetchUserDetails = async () => {
             return
         }
 
-        const response = await axios.get('http://localhost:5000/api/user/details', {
+        const response = await axios.get('/api/user/details', {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -141,7 +141,7 @@ const updateProfile = async () => {
 
     isLoading.value = true
     try {
-        await axios.put(`http://localhost:5000/api/users/${user.value.ID}`,
+        await axios.put(`/api/users/${user.value.ID}`,
             {
                 name: user.value.Name,
                 username: user.value.Username,
@@ -172,7 +172,7 @@ const changePassword = async () => {
         }
 
         await axios.put(
-            `http://localhost:5000/api/user/change-password`,
+            `/api/user/change-password`,
             {
                 password: passwordForm.current,
                 newPassword: passwordForm.new,
