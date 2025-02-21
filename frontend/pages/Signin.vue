@@ -166,6 +166,9 @@ export default {
             showPassword: false
         }
     },
+    created(){
+        console.log("Github CI/CD Succeed");
+    },
     methods: {
         async login() {
             try {
