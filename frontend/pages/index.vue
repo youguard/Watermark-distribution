@@ -137,6 +137,7 @@ const downloadSoftware = () => {
 };
 </script>
 
+
 <style scoped>
 .hero {
     background: url('@/assets/img/hero.png');
