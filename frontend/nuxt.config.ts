@@ -11,6 +11,14 @@ export default defineNuxtConfig({
   router: {
     middleware: ['auth'],
   },
-
+  nitro: {
+    devProxy: {
+      "/api": {
+        target: "http://localhost:5000/api",
+        changeOrigin: true,
+        prependPath: true,
+      }
+    }
+  },
   css: ['~/assets/css/main.css', 'vue3-toastify/dist/index.css'],
 })

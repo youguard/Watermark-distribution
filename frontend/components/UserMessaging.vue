@@ -141,7 +141,7 @@ const userDetails = ref({})
 const fetchUserDetails = async () => {
     try {
         const token = localStorage.getItem("accessToken")
-        const response = await axios.get('/api/user/details',
+        const response = await axios.get("/api/user/details",
             {
                 headers: {
                     Authorization: `Bearer ${token}`
