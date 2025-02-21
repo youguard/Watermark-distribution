@@ -45,7 +45,7 @@
 
       <div class="md:hidden" :style="{ marginBottom: actionDivHeight + 'px' }"></div>
 
-      <div class="fixed md:static bottom-0 left-0 p-3 bg-white" ref="actiondiv">
+      <div class="fixed md:static bottom-0 left-0 p-3 bg-white w-full" ref="actiondiv">
 
         <!-- Image Upload -->
         <!-- <div class="mb-6 hidden md:block">
