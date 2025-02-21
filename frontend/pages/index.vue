@@ -123,8 +123,17 @@
 </template>
 
 <script setup>
+import { useHead } from 'nuxt/app'
 import { Icon } from "@iconify/vue";
+import { ref } from 'vue';
 
+// 🔹 Google & Naver 사이트 인증 메타 태그 추가
+useHead({
+  meta: [
+    { name: "google-site-verification", content: "gdclOcaoXxkxln1EP7TK3QsdwG4rMZr-rMnUxtp6LGQ" },
+    { name: "naver-site-verification", content: "b80e90d89793733822fd10860efc3c2276541563" }
+  ]
+})
 
 const announcement = ref('New version 2.1.0 is now available with enhanced security features!');
 const currentVersion = ref('2.1.0');
