@@ -24,6 +24,8 @@ jobs:
           cd /var/www
           git pull origin main
           cd /var/www/frontend
+          export NVM_DIR=~/.nvm
+          source ~/.nvm/nvm.sh 
           npm install
           npm run build
           pm2 restart frontend
